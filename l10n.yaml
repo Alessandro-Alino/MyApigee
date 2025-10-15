@@ -1,0 +1,3 @@
+arb-dir: lib/config/l10n
+template-arb-file: app_it.arb
+output-dir: lib/config/l10n/generated
