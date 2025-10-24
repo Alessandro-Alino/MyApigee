@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
 import 'package:myapigee/config/route/app_route.gr.dart';
 import 'package:myapigee/config/route/app_route_const.dart';
 
@@ -17,29 +16,20 @@ class AppRouter extends RootStackRouter {
       initial: true,
       children: [
         // Parser XML Page
-        CustomRoute(
+        AutoRoute(
           initial: true,
           path: AppRouteConst.parserXmlPage,
           page: ParserXmlRoute.page,
-          transitionsBuilder: TransitionsBuilders.fadeIn,
-          duration: Durations.medium4,
-          reverseDuration: Durations.medium4,
         ),
         // Create API Page
-        CustomRoute(
+        AutoRoute(
           path: AppRouteConst.createApiPage,
           page: CreateApiRoute.page,
-          transitionsBuilder: TransitionsBuilders.fadeIn,
-          duration: Durations.medium4,
-          reverseDuration: Durations.medium4,
         ),
         // Cloud Page
-        CustomRoute(
+        AutoRoute(
           path: AppRouteConst.cloudPage,
           page: CloudRoute.page,
-          transitionsBuilder: TransitionsBuilders.fadeIn,
-          duration: Durations.medium4,
-          reverseDuration: Durations.medium4,
         ),
       ],
     ),
