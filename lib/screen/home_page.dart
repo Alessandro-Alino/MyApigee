@@ -12,12 +12,16 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.ltr.home),
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.blueGrey.shade700,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
           child: Container(
+            decoration: BoxDecoration(
+              color: Colors.blueGrey.shade900,
+              borderRadius: BorderRadius.circular(16.0),
+            ),
             constraints: BoxConstraints(maxWidth: 1500.0),
             child: Row(
               children: [
@@ -29,7 +33,6 @@ class HomePage extends StatelessWidget {
                     clipBehavior: Clip.hardEdge,
                     margin: const EdgeInsets.only(left: 8.0),
                     decoration: BoxDecoration(
-                      color: Colors.red.withAlpha(100),
                       borderRadius: BorderRadius.circular(16.0),
                     ),
                     child: AutoRouter(),

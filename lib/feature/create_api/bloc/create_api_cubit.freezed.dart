@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateApiState {
 
- String? get result; String? get errorMex;
+ String? get result; InfoMex? get infoMex;
 /// Create a copy of CreateApiState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CreateApiStateCopyWith<CreateApiState> get copyWith => _$CreateApiStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateApiState&&(identical(other.result, result) || other.result == result)&&(identical(other.errorMex, errorMex) || other.errorMex == errorMex));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateApiState&&(identical(other.result, result) || other.result == result)&&(identical(other.infoMex, infoMex) || other.infoMex == infoMex));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,result,errorMex);
+int get hashCode => Object.hash(runtimeType,result,infoMex);
 
 @override
 String toString() {
-  return 'CreateApiState(result: $result, errorMex: $errorMex)';
+  return 'CreateApiState(result: $result, infoMex: $infoMex)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $CreateApiStateCopyWith<$Res>  {
   factory $CreateApiStateCopyWith(CreateApiState value, $Res Function(CreateApiState) _then) = _$CreateApiStateCopyWithImpl;
 @useResult
 $Res call({
- String? result, String? errorMex
+ String? result, InfoMex? infoMex
 });
 
 
-
+$InfoMexCopyWith<$Res>? get infoMex;
 
 }
 /// @nodoc
@@ -62,14 +62,26 @@ class _$CreateApiStateCopyWithImpl<$Res>
 
 /// Create a copy of CreateApiState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? result = freezed,Object? errorMex = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? result = freezed,Object? infoMex = freezed,}) {
   return _then(_self.copyWith(
 result: freezed == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
-as String?,errorMex: freezed == errorMex ? _self.errorMex : errorMex // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,infoMex: freezed == infoMex ? _self.infoMex : infoMex // ignore: cast_nullable_to_non_nullable
+as InfoMex?,
   ));
 }
+/// Create a copy of CreateApiState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$InfoMexCopyWith<$Res>? get infoMex {
+    if (_self.infoMex == null) {
+    return null;
+  }
 
+  return $InfoMexCopyWith<$Res>(_self.infoMex!, (value) {
+    return _then(_self.copyWith(infoMex: value));
+  });
+}
 }
 
 
@@ -148,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? result,  String? errorMex)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? result,  InfoMex? infoMex)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreateApiState() when $default != null:
-return $default(_that.result,_that.errorMex);case _:
+return $default(_that.result,_that.infoMex);case _:
   return orElse();
 
 }
@@ -169,10 +181,10 @@ return $default(_that.result,_that.errorMex);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? result,  String? errorMex)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? result,  InfoMex? infoMex)  $default,) {final _that = this;
 switch (_that) {
 case _CreateApiState():
-return $default(_that.result,_that.errorMex);}
+return $default(_that.result,_that.infoMex);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -186,10 +198,10 @@ return $default(_that.result,_that.errorMex);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? result,  String? errorMex)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? result,  InfoMex? infoMex)?  $default,) {final _that = this;
 switch (_that) {
 case _CreateApiState() when $default != null:
-return $default(_that.result,_that.errorMex);case _:
+return $default(_that.result,_that.infoMex);case _:
   return null;
 
 }
@@ -201,11 +213,11 @@ return $default(_that.result,_that.errorMex);case _:
 
 
 class _CreateApiState implements CreateApiState {
-  const _CreateApiState({this.result, this.errorMex});
+  const _CreateApiState({this.result, this.infoMex});
   
 
 @override final  String? result;
-@override final  String? errorMex;
+@override final  InfoMex? infoMex;
 
 /// Create a copy of CreateApiState
 /// with the given fields replaced by the non-null parameter values.
@@ -217,16 +229,16 @@ _$CreateApiStateCopyWith<_CreateApiState> get copyWith => __$CreateApiStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateApiState&&(identical(other.result, result) || other.result == result)&&(identical(other.errorMex, errorMex) || other.errorMex == errorMex));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateApiState&&(identical(other.result, result) || other.result == result)&&(identical(other.infoMex, infoMex) || other.infoMex == infoMex));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,result,errorMex);
+int get hashCode => Object.hash(runtimeType,result,infoMex);
 
 @override
 String toString() {
-  return 'CreateApiState(result: $result, errorMex: $errorMex)';
+  return 'CreateApiState(result: $result, infoMex: $infoMex)';
 }
 
 
@@ -237,11 +249,11 @@ abstract mixin class _$CreateApiStateCopyWith<$Res> implements $CreateApiStateCo
   factory _$CreateApiStateCopyWith(_CreateApiState value, $Res Function(_CreateApiState) _then) = __$CreateApiStateCopyWithImpl;
 @override @useResult
 $Res call({
- String? result, String? errorMex
+ String? result, InfoMex? infoMex
 });
 
 
-
+@override $InfoMexCopyWith<$Res>? get infoMex;
 
 }
 /// @nodoc
@@ -254,15 +266,27 @@ class __$CreateApiStateCopyWithImpl<$Res>
 
 /// Create a copy of CreateApiState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? result = freezed,Object? errorMex = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? result = freezed,Object? infoMex = freezed,}) {
   return _then(_CreateApiState(
 result: freezed == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
-as String?,errorMex: freezed == errorMex ? _self.errorMex : errorMex // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,infoMex: freezed == infoMex ? _self.infoMex : infoMex // ignore: cast_nullable_to_non_nullable
+as InfoMex?,
   ));
 }
 
+/// Create a copy of CreateApiState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$InfoMexCopyWith<$Res>? get infoMex {
+    if (_self.infoMex == null) {
+    return null;
+  }
 
+  return $InfoMexCopyWith<$Res>(_self.infoMex!, (value) {
+    return _then(_self.copyWith(infoMex: value));
+  });
+}
 }
 
 // dart format on

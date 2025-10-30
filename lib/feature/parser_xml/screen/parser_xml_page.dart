@@ -6,7 +6,7 @@ import 'package:myapigee/feature/parser_xml/screen/parser_xml_initial.dart';
 import 'package:myapigee/feature/parser_xml/screen/parser_xml_selected.dart';
 import 'package:myapigee/feature/parser_xml/screen/parser_xml_success.dart';
 import 'package:myapigee/widget/app_loading.dart';
-import 'package:myapigee/widget/app_snackbar.dart';
+import 'package:myapigee/widget/snackbar/app_snackbar.dart';
 
 @RoutePage()
 class ParserXmlPage extends StatelessWidget {
@@ -16,13 +16,9 @@ class ParserXmlPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<ParserXmlCubit, ParserXmlState>(
       listener: (context, state) {
-        // Shoe Error Mex
-        if (state.errorMex != null) {
-          context.appSnackBar(
-            child: Text('${state.errorMex}'),
-            icon: Icons.close,
-            isError: true,
-          );
+        // InfoMex
+        if (state.infoMex != null) {
+          context.appSnackBar(infoMex: state.infoMex!);
         }
       },
       builder: (context, state) {

@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:myapigee/feature/parser_xml/model/api_model.dart';
+import 'package:myapigee/widget/snackbar/model/info_mex_model.dart';
 import 'package:xml/xml.dart';
 
 part 'parser_xml_state.dart';
@@ -30,7 +32,7 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
         ),
       );
     } else {
-      errorMex('File non selezionato');
+      log('Nessun file selezionato');
     }
   }
 
@@ -52,7 +54,7 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
         ),
       );
     } catch (e) {
-      errorMex('Errore di parsing XML: $e');
+      _showMex(mex: 'Errore di parsing XML: $e', type: MexType.error);
     }
   }
 
@@ -89,7 +91,7 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
           );
           apiModels.add(apiModel);
         } else {
-          errorMex('Method non trovato');
+          _showMex(mex: 'Method non trovato', type: MexType.error);
         }
       }
     });
@@ -112,11 +114,15 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
     }
   }
 
-  // Error Message
-  void errorMex(String error) {
-    emit(state.copyWith(errorMex: '[BLOC] $error'));
+  // Show Mex
+  void _showMex({required String mex, required MexType type}) {
+    emit(
+      state.copyWith(
+        infoMex: InfoMex(mex: mex, type: type),
+      ),
+    );
     Future.delayed(const Duration(seconds: 2), () {
-      emit(state.copyWith(errorMex: null));
+      emit(state.copyWith(infoMex: null));
     });
   }
 

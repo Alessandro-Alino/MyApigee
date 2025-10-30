@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:myapigee/feature/parser_xml/model/api_model.dart';
+import 'package:myapigee/widget/snackbar/model/info_mex_model.dart';
 
 part 'create_api_state.dart';
 
@@ -36,15 +37,15 @@ class CreateApiCubit extends Cubit<CreateApiState> {
     if (methodMatches.isEmpty || apiMatches.isEmpty) {
       final String errMex = 'Nessun endpoint trovato nella email.';
       log(errMex);
-      emit(state.copyWith(errorMex: errMex));
+      _infoMex(errMex, MexType.error);
     }
 
     // If methods and api are not equal, return errorMex
     if (methodMatches.length != apiMatches.length) {
       final String errMex =
-          'CREATE_API_BLOC: Numero di metodi (${methodMatches.length}) e api (${apiMatches.length}) non coincide.';
+          'Numero di metodi (${methodMatches.length}) e api (${apiMatches.length}) non coincide.';
       log(errMex);
-      emit(state.copyWith(errorMex: errMex));
+      _infoMex(errMex, MexType.error);
     }
     // If methods and api are equal, return apiModels
     if (methodMatches.length == apiMatches.length) {
@@ -88,9 +89,9 @@ class CreateApiCubit extends Cubit<CreateApiState> {
         }
         // if method or api is null, return errorMex
         else {
-          final String errMex = 'CREATE_API_BLOC: Metodo o api non trovato.';
+          final String errMex = 'Metodo o api non trovato.';
           log(errMex);
-          emit(state.copyWith(errorMex: errMex));
+          _infoMex(errMex, MexType.error);
         }
       }
       return result.join();
@@ -104,10 +105,14 @@ class CreateApiCubit extends Cubit<CreateApiState> {
   }
 
   // Error Message
-  void errorMex(String error) {
-    emit(state.copyWith(errorMex: '[CREATE_API_BLOC] $error'));
+  void _infoMex(String mex, MexType type) {
+    emit(
+      state.copyWith(
+        infoMex: InfoMex(mex: '[CREATE_API_BLOC] $mex', type: type),
+      ),
+    );
     Future.delayed(const Duration(seconds: 2), () {
-      emit(state.copyWith(errorMex: null));
+      emit(state.copyWith(infoMex: null));
     });
   }
 

@@ -21,7 +21,7 @@ class _SideBarState extends State<SideBar> {
           curve: Curves.easeInOut,
           duration: const Duration(milliseconds: 500),
           decoration: BoxDecoration(
-            color: Colors.yellow.withAlpha(100),
+            color: Colors.blueGrey.shade700,
             borderRadius: BorderRadius.circular(16.0),
           ),
           padding: const EdgeInsets.all(8.0),

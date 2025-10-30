@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapigee/feature/create_api/bloc/create_api_cubit.dart';
 import 'package:myapigee/feature/create_api/widget/create_api_textfield.dart';
-import 'package:myapigee/widget/app_snackbar.dart';
+import 'package:myapigee/widget/snackbar/app_snackbar.dart';
 
 @RoutePage()
 class CreateApiPage extends StatefulWidget {
@@ -28,13 +28,9 @@ class _CreateApiPageState extends State<CreateApiPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<CreateApiCubit, CreateApiState>(
       listener: (context, state) {
-        // ErrorMex
-        if (state.errorMex != null) {
-          context.appSnackBar(
-            isError: true,
-            child: Text(state.errorMex!),
-            icon: Icons.error,
-          );
+        // InfoMex
+        if (state.infoMex != null) {
+          context.appSnackBar(infoMex: state.infoMex!);
         }
         // If result is not null, set the result to the textfield
         if (state.result != null) {

@@ -1,70 +1,75 @@
 import 'dart:developer';
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CloudRepo {
-  final SupabaseClient _supabase;
-  final String bucketName;
+  // Singleton
+  static final CloudRepo _instance = CloudRepo._internal();
 
-  CloudRepo({required SupabaseClient supabase, required this.bucketName})
-    : _supabase = supabase;
+  factory CloudRepo() => _instance;
 
-  /// Recupera la lista di tutti i file nel bucket
-  Future<void> listFiles() async {
+  CloudRepo._internal();
+
+  final SupabaseClient _supabase = SupabaseClient(
+    const String.fromEnvironment('supabaseUrl'),
+    const String.fromEnvironment('sbPublishable'),
+  );
+
+  final String _bucketName = const String.fromEnvironment('bucketName');
+
+  // Get the list of files in the bucket
+  Future<List<FileObject>> listFiles() async {
+    List<FileObject> response = [];
     try {
-      final response = await _supabase.storage.from(bucketName).list();
-      log(response.toString());
+      response = await _supabase.storage
+          .from(_bucketName)
+          .list(path: 'uploads');
     } catch (e) {
+      log('CLOUD_REPO_ERROR: Errore nel recupero dei file.\n$e');
       throw Exception('Errore nel recupero dei file: $e');
+    }
+    return response;
+  }
+
+  // Download file frpm get the URL of a file in the bucket
+  Future<String> getFileUrl(String fileName) async {
+    try {
+      final url = await _supabase.storage
+          .from(_bucketName)
+          .createSignedUrl('uploads/$fileName', 60);
+
+      return url;
+    } catch (e) {
+      throw Exception('Errore nel recupero dell\'URL del file: $e');
     }
   }
 
-  /// Carica un file nel bucket Supabase
-  Future<String> uploadFile(String filePath) async {
+  // Upload a file to the bucket
+  Future<String> uploadFile(String fileName, Uint8List bytes) async {
     try {
-      final file = File(filePath);
-      final fileName = file.path.split('/').last;
-      final bytes = await file.readAsBytes();
-
       await _supabase.storage
-          .from(bucketName)
+          .from(_bucketName)
           .uploadBinary(
-            fileName,
+            'uploads/$fileName',
             bytes,
             fileOptions: const FileOptions(upsert: true),
           );
-
       return fileName;
     } catch (e) {
       throw Exception('Errore nel caricamento del file: $e');
     }
   }
 
-  /// Scarica un file dal bucket e lo salva localmente
-  Future<String> downloadFile(String fileName, String savePath) async {
+  // Delete a file from the bucket
+  Future<List<FileObject>> deleteFile(String fileName) async {
     try {
-      final bytes = await _supabase.storage.from(bucketName).download(fileName);
-
-      final file = File('$savePath/$fileName');
-      await file.writeAsBytes(bytes);
-
-      return file.path;
+      final result = await _supabase.storage.from(_bucketName).remove([
+        'uploads/$fileName',
+      ]);
+      return result;
     } catch (e) {
-      throw Exception('Errore nello scaricamento del file: $e');
-    }
-  }
-
-  /// Elimina un file dal bucket
-  Future<void> deleteFile(String fileName) async {
-    try {
-      await _supabase.storage.from(bucketName).remove([fileName]);
-    } catch (e) {
+      log('CLOUD_REPO_ERROR: Errore nell\'eliminazione del file.\n$e');
       throw Exception('Errore nell\'eliminazione del file: $e');
     }
-  }
-
-  /// Ottiene l'URL pubblico di un file
-  String getPublicUrl(String fileName) {
-    return _supabase.storage.from(bucketName).getPublicUrl(fileName);
   }
 }

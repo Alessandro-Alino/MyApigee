@@ -4,13 +4,13 @@ part of 'parser_xml_cubit.dart';
 sealed class ParserXmlState with _$ParserXmlState {
   const factory ParserXmlState({
     required ParserXmlStatus status,
-    File? file,
-    String? fileName,
-    XmlDocument? xmlDocument,
-    List<ApiModel>? apiModels,
-    List<ApiModel>? apiModelsFiltered,
-    String? xml,
-    String? errorMex,
+    final File? file,
+    final String? fileName,
+    final XmlDocument? xmlDocument,
+    final List<ApiModel>? apiModels,
+    final List<ApiModel>? apiModelsFiltered,
+    final String? xml,
+    final InfoMex? infoMex,
   }) = _ParserXmlState;
 
   static ParserXmlState initState() => const ParserXmlState(
@@ -21,7 +21,7 @@ sealed class ParserXmlState with _$ParserXmlState {
     apiModels: null,
     apiModelsFiltered: null,
     xml: null,
-    errorMex: null,
+    infoMex: null,
   );
 }
 

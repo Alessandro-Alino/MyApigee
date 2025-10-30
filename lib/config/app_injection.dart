@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapigee/config/theme/bloc/app_theme_cubit.dart';
 import 'package:myapigee/config/theme/repo/app_theme_service.dart';
+import 'package:myapigee/feature/cloud/bloc/cloud_cubit.dart';
+import 'package:myapigee/feature/cloud/repo/cloud_repo.dart';
 import 'package:myapigee/feature/create_api/bloc/create_api_cubit.dart';
 import 'package:myapigee/feature/parser_xml/bloc/parser_xml_cubit.dart';
 import 'package:myapigee/widget/sidebar/bloc/sidebar_cubit.dart';
@@ -24,6 +26,8 @@ class AppInjection extends StatelessWidget {
         RepositoryProvider<AppSidebarService>(
           create: (context) => AppSidebarService(),
         ),
+        // Cloud Repo
+        RepositoryProvider<CloudRepo>(create: (context) => CloudRepo()),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -39,6 +43,11 @@ class AppInjection extends StatelessWidget {
           BlocProvider<ParserXmlCubit>(create: (context) => ParserXmlCubit()),
           // CreateApi Cubit
           BlocProvider<CreateApiCubit>(create: (context) => CreateApiCubit()),
+          // CloudApi Cubit
+          BlocProvider<CloudCubit>(
+            create: (context) =>
+                CloudCubit(cloudRepo: context.read<CloudRepo>()),
+          ),
         ],
         child: child,
       ),

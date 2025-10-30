@@ -16,20 +16,23 @@ class AppRouter extends RootStackRouter {
       initial: true,
       children: [
         // Parser XML Page
-        AutoRoute(
+        CustomRoute(
           initial: true,
           path: AppRouteConst.parserXmlPage,
           page: ParserXmlRoute.page,
+          transitionsBuilder: TransitionsBuilders.fadeIn,
         ),
         // Create API Page
-        AutoRoute(
+        CustomRoute(
           path: AppRouteConst.createApiPage,
           page: CreateApiRoute.page,
+          transitionsBuilder: TransitionsBuilders.fadeIn,
         ),
         // Cloud Page
-        AutoRoute(
+        CustomRoute(
           path: AppRouteConst.cloudPage,
           page: CloudRoute.page,
+          transitionsBuilder: TransitionsBuilders.fadeIn,
         ),
       ],
     ),
