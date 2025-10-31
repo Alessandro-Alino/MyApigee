@@ -1,2 +1,10 @@
 .idea
 api_key.json
+.dart_tool/
+build/
+windows/
+linux/
+macos/
+ios/
+android/
+.flutter-plugins-dependencies
