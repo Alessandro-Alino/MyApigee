@@ -1,10 +1,12 @@
+import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:myapigee/feature/parser_xml/model/api_model.dart';
 import 'package:myapigee/widget/snackbar/model/info_mex_model.dart';
+import 'package:universal_io/io.dart';
 import 'package:xml/xml.dart';
 
 part 'parser_xml_state.dart';
@@ -24,10 +26,17 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
     if (result != null) {
       final File file = File(result.files.single.path!);
       final String fileName = result.files.single.name;
+      final Uint8List? fileBytes = result.files.single.bytes;
+
+      if (fileBytes == null) {
+        log('No FileBytes');
+        log('FILE: ${result.files.single}');
+      }
       emit(
         state.copyWith(
           status: ParserXmlStatus.selected,
           file: file,
+          fileBytes: fileBytes,
           fileName: fileName,
         ),
       );
@@ -37,24 +46,46 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
   }
 
   // Parse XML
-  void parseXml(String selectedXml) {
-    try {
-      // Get XML doc.
-      final XmlDocument xmlDocument = XmlDocument.parse(selectedXml);
-      final String xml = xmlDocument.toXmlString(pretty: true);
-      // Extract API
-      List<ApiModel> apiModels = _extractApi(xmlDocument);
-      emit(
-        state.copyWith(
-          status: ParserXmlStatus.success,
-          xmlDocument: xmlDocument,
-          xml: xml,
-          apiModels: apiModels,
-          apiModelsFiltered: apiModels,
-        ),
-      );
-    } catch (e) {
-      _showMex(mex: 'Errore di parsing XML: $e', type: MexType.error);
+  void parseXml() {
+    String? file;
+
+    if (kIsWeb) {
+      log('WEB');
+      if (kIsWasm) {
+        log('WEB - WASM');
+      }
+      if (state.fileBytes != null) {
+        file = utf8.decode(state.fileBytes!);
+      }
+    } else {
+      log('NOT - WEB');
+      if (state.file != null) {
+        file = state.file!.readAsStringSync();
+      }
+    }
+
+    if (file == null || file.isEmpty) {
+      _showMex(mex: 'Nessun file selezionato', type: MexType.error);
+    } else {
+      //final String file = state.file!.readAsStringSync();
+      try {
+        // Get XML doc.
+        final XmlDocument xmlDocument = XmlDocument.parse(file);
+        final String xml = xmlDocument.toXmlString(pretty: true);
+        // Extract API
+        List<ApiModel> apiModels = _extractApi(xmlDocument);
+        emit(
+          state.copyWith(
+            status: ParserXmlStatus.success,
+            xmlDocument: xmlDocument,
+            xml: xml,
+            apiModels: apiModels,
+            apiModelsFiltered: apiModels,
+          ),
+        );
+      } catch (e) {
+        _showMex(mex: 'Errore di parsing XML: $e', type: MexType.error);
+      }
     }
   }
 
@@ -63,15 +94,15 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
     final List<ApiModel> apiModels = [];
 
     xmlDocument.findAllElements('Flow').forEach((flow) {
-      // 1) name API
+      // Name API
       final nameApiReg = RegExp('<Flow\\s+name="([^"]+)"');
       final nameApi = nameApiReg.firstMatch(flow.outerXml)?.group(1);
 
-      // 2) api
+      // Api
       final apiReg = RegExp('MatchesPath\\s+"([^"]+)"');
       final api = apiReg.firstMatch(flow.outerXml)?.group(1);
 
-      // 3) method
+      // Method
       final methodReg = RegExp('request\\.verb\\s*=\\s*"([^"]+)"');
       final methodz = methodReg.firstMatch(flow.outerXml)?.group(1);
 

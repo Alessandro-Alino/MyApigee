@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapigee/config/extension/extensions.dart';
@@ -24,10 +25,7 @@ class CloudFileList extends StatelessWidget {
                 constraints: BoxConstraints(maxWidth: 800.0),
                 child: Card(
                   child: ListTile(
-                    title: Text(
-                      file.name,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    title: Text(file.name, overflow: TextOverflow.ellipsis),
                     subtitle: Text('${size.formatFileSize()}'),
                     trailing: Row(
                       spacing: 8.0,
@@ -40,9 +38,16 @@ class CloudFileList extends StatelessWidget {
                           onPressed: () {
                             // If not downloading another file
                             if (!state.isNetworking) {
-                              context
-                                  .read<CloudCubit>()
-                                  .downloadFileWithProgress(file);
+                              // Is WEB
+                              if (kIsWeb) {
+                                context.read<CloudCubit>().downloadFile(file);
+                              }
+                              // Is Platform (Android, iOS, Linux, Windows, Mac)
+                              else {
+                                context
+                                    .read<CloudCubit>()
+                                    .downloadFileWithProgress(file);
+                              }
                             }
                           },
                           icon: Icon(Icons.download),

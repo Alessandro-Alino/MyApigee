@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapigee/feature/parser_xml/bloc/parser_xml_cubit.dart';
@@ -39,10 +40,10 @@ class ParserXmlSelected extends StatelessWidget {
                   avatar: Icon(Icons.play_arrow),
                   onPressed: () {
                     // If the file is not null, parse the XML
-                    if (state.file != null) {
-                      context.read<ParserXmlCubit>().parseXml(
-                        state.file!.readAsStringSync(),
-                      );
+                    if (state.file != null || state.fileBytes != null) {
+                      context.read<ParserXmlCubit>().parseXml();
+                    } else {
+                      log('What');
                     }
                   },
                 ),

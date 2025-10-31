@@ -44,6 +44,18 @@ class CloudRepo {
     }
   }
 
+  // Download a file from the bucket
+  Future<Uint8List> downloadFile(String fileName) async {
+    try {
+      final result = await _supabase.storage
+          .from(_bucketName)
+          .download('uploads/$fileName');
+      return result;
+    } catch (e) {
+      throw Exception('Errore nel caricamento del file: $e');
+    }
+  }
+
   // Upload a file to the bucket
   Future<String> uploadFile(String fileName, Uint8List bytes) async {
     try {

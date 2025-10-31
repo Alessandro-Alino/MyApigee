@@ -5,6 +5,7 @@ sealed class ParserXmlState with _$ParserXmlState {
   const factory ParserXmlState({
     required ParserXmlStatus status,
     final File? file,
+    final Uint8List? fileBytes,
     final String? fileName,
     final XmlDocument? xmlDocument,
     final List<ApiModel>? apiModels,
@@ -16,6 +17,7 @@ sealed class ParserXmlState with _$ParserXmlState {
   static ParserXmlState initState() => const ParserXmlState(
     status: ParserXmlStatus.initial,
     file: null,
+    fileBytes: null,
     fileName: null,
     xmlDocument: null,
     apiModels: null,

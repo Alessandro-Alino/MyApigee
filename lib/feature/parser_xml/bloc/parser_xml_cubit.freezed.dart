@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParserXmlState {
 
- ParserXmlStatus get status; File? get file; String? get fileName; XmlDocument? get xmlDocument; List<ApiModel>? get apiModels; List<ApiModel>? get apiModelsFiltered; String? get xml; InfoMex? get infoMex;
+ ParserXmlStatus get status; File? get file; Uint8List? get fileBytes; String? get fileName; XmlDocument? get xmlDocument; List<ApiModel>? get apiModels; List<ApiModel>? get apiModelsFiltered; String? get xml; InfoMex? get infoMex;
 /// Create a copy of ParserXmlState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ParserXmlStateCopyWith<ParserXmlState> get copyWith => _$ParserXmlStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParserXmlState&&(identical(other.status, status) || other.status == status)&&(identical(other.file, file) || other.file == file)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.xmlDocument, xmlDocument) || other.xmlDocument == xmlDocument)&&const DeepCollectionEquality().equals(other.apiModels, apiModels)&&const DeepCollectionEquality().equals(other.apiModelsFiltered, apiModelsFiltered)&&(identical(other.xml, xml) || other.xml == xml)&&(identical(other.infoMex, infoMex) || other.infoMex == infoMex));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParserXmlState&&(identical(other.status, status) || other.status == status)&&(identical(other.file, file) || other.file == file)&&const DeepCollectionEquality().equals(other.fileBytes, fileBytes)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.xmlDocument, xmlDocument) || other.xmlDocument == xmlDocument)&&const DeepCollectionEquality().equals(other.apiModels, apiModels)&&const DeepCollectionEquality().equals(other.apiModelsFiltered, apiModelsFiltered)&&(identical(other.xml, xml) || other.xml == xml)&&(identical(other.infoMex, infoMex) || other.infoMex == infoMex));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,file,fileName,xmlDocument,const DeepCollectionEquality().hash(apiModels),const DeepCollectionEquality().hash(apiModelsFiltered),xml,infoMex);
+int get hashCode => Object.hash(runtimeType,status,file,const DeepCollectionEquality().hash(fileBytes),fileName,xmlDocument,const DeepCollectionEquality().hash(apiModels),const DeepCollectionEquality().hash(apiModelsFiltered),xml,infoMex);
 
 @override
 String toString() {
-  return 'ParserXmlState(status: $status, file: $file, fileName: $fileName, xmlDocument: $xmlDocument, apiModels: $apiModels, apiModelsFiltered: $apiModelsFiltered, xml: $xml, infoMex: $infoMex)';
+  return 'ParserXmlState(status: $status, file: $file, fileBytes: $fileBytes, fileName: $fileName, xmlDocument: $xmlDocument, apiModels: $apiModels, apiModelsFiltered: $apiModelsFiltered, xml: $xml, infoMex: $infoMex)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ParserXmlStateCopyWith<$Res>  {
   factory $ParserXmlStateCopyWith(ParserXmlState value, $Res Function(ParserXmlState) _then) = _$ParserXmlStateCopyWithImpl;
 @useResult
 $Res call({
- ParserXmlStatus status, File? file, String? fileName, XmlDocument? xmlDocument, List<ApiModel>? apiModels, List<ApiModel>? apiModelsFiltered, String? xml, InfoMex? infoMex
+ ParserXmlStatus status, File? file, Uint8List? fileBytes, String? fileName, XmlDocument? xmlDocument, List<ApiModel>? apiModels, List<ApiModel>? apiModelsFiltered, String? xml, InfoMex? infoMex
 });
 
 
@@ -62,11 +62,12 @@ class _$ParserXmlStateCopyWithImpl<$Res>
 
 /// Create a copy of ParserXmlState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? file = freezed,Object? fileName = freezed,Object? xmlDocument = freezed,Object? apiModels = freezed,Object? apiModelsFiltered = freezed,Object? xml = freezed,Object? infoMex = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? file = freezed,Object? fileBytes = freezed,Object? fileName = freezed,Object? xmlDocument = freezed,Object? apiModels = freezed,Object? apiModelsFiltered = freezed,Object? xml = freezed,Object? infoMex = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ParserXmlStatus,file: freezed == file ? _self.file : file // ignore: cast_nullable_to_non_nullable
-as File?,fileName: freezed == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
+as File?,fileBytes: freezed == fileBytes ? _self.fileBytes : fileBytes // ignore: cast_nullable_to_non_nullable
+as Uint8List?,fileName: freezed == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
 as String?,xmlDocument: freezed == xmlDocument ? _self.xmlDocument : xmlDocument // ignore: cast_nullable_to_non_nullable
 as XmlDocument?,apiModels: freezed == apiModels ? _self.apiModels : apiModels // ignore: cast_nullable_to_non_nullable
 as List<ApiModel>?,apiModelsFiltered: freezed == apiModelsFiltered ? _self.apiModelsFiltered : apiModelsFiltered // ignore: cast_nullable_to_non_nullable
@@ -166,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParserXmlStatus status,  File? file,  String? fileName,  XmlDocument? xmlDocument,  List<ApiModel>? apiModels,  List<ApiModel>? apiModelsFiltered,  String? xml,  InfoMex? infoMex)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParserXmlStatus status,  File? file,  Uint8List? fileBytes,  String? fileName,  XmlDocument? xmlDocument,  List<ApiModel>? apiModels,  List<ApiModel>? apiModelsFiltered,  String? xml,  InfoMex? infoMex)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParserXmlState() when $default != null:
-return $default(_that.status,_that.file,_that.fileName,_that.xmlDocument,_that.apiModels,_that.apiModelsFiltered,_that.xml,_that.infoMex);case _:
+return $default(_that.status,_that.file,_that.fileBytes,_that.fileName,_that.xmlDocument,_that.apiModels,_that.apiModelsFiltered,_that.xml,_that.infoMex);case _:
   return orElse();
 
 }
@@ -187,10 +188,10 @@ return $default(_that.status,_that.file,_that.fileName,_that.xmlDocument,_that.a
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParserXmlStatus status,  File? file,  String? fileName,  XmlDocument? xmlDocument,  List<ApiModel>? apiModels,  List<ApiModel>? apiModelsFiltered,  String? xml,  InfoMex? infoMex)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParserXmlStatus status,  File? file,  Uint8List? fileBytes,  String? fileName,  XmlDocument? xmlDocument,  List<ApiModel>? apiModels,  List<ApiModel>? apiModelsFiltered,  String? xml,  InfoMex? infoMex)  $default,) {final _that = this;
 switch (_that) {
 case _ParserXmlState():
-return $default(_that.status,_that.file,_that.fileName,_that.xmlDocument,_that.apiModels,_that.apiModelsFiltered,_that.xml,_that.infoMex);}
+return $default(_that.status,_that.file,_that.fileBytes,_that.fileName,_that.xmlDocument,_that.apiModels,_that.apiModelsFiltered,_that.xml,_that.infoMex);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -204,10 +205,10 @@ return $default(_that.status,_that.file,_that.fileName,_that.xmlDocument,_that.a
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParserXmlStatus status,  File? file,  String? fileName,  XmlDocument? xmlDocument,  List<ApiModel>? apiModels,  List<ApiModel>? apiModelsFiltered,  String? xml,  InfoMex? infoMex)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParserXmlStatus status,  File? file,  Uint8List? fileBytes,  String? fileName,  XmlDocument? xmlDocument,  List<ApiModel>? apiModels,  List<ApiModel>? apiModelsFiltered,  String? xml,  InfoMex? infoMex)?  $default,) {final _that = this;
 switch (_that) {
 case _ParserXmlState() when $default != null:
-return $default(_that.status,_that.file,_that.fileName,_that.xmlDocument,_that.apiModels,_that.apiModelsFiltered,_that.xml,_that.infoMex);case _:
+return $default(_that.status,_that.file,_that.fileBytes,_that.fileName,_that.xmlDocument,_that.apiModels,_that.apiModelsFiltered,_that.xml,_that.infoMex);case _:
   return null;
 
 }
@@ -219,11 +220,12 @@ return $default(_that.status,_that.file,_that.fileName,_that.xmlDocument,_that.a
 
 
 class _ParserXmlState implements ParserXmlState {
-  const _ParserXmlState({required this.status, this.file, this.fileName, this.xmlDocument, final  List<ApiModel>? apiModels, final  List<ApiModel>? apiModelsFiltered, this.xml, this.infoMex}): _apiModels = apiModels,_apiModelsFiltered = apiModelsFiltered;
+  const _ParserXmlState({required this.status, this.file, this.fileBytes, this.fileName, this.xmlDocument, final  List<ApiModel>? apiModels, final  List<ApiModel>? apiModelsFiltered, this.xml, this.infoMex}): _apiModels = apiModels,_apiModelsFiltered = apiModelsFiltered;
   
 
 @override final  ParserXmlStatus status;
 @override final  File? file;
+@override final  Uint8List? fileBytes;
 @override final  String? fileName;
 @override final  XmlDocument? xmlDocument;
  final  List<ApiModel>? _apiModels;
@@ -257,16 +259,16 @@ _$ParserXmlStateCopyWith<_ParserXmlState> get copyWith => __$ParserXmlStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParserXmlState&&(identical(other.status, status) || other.status == status)&&(identical(other.file, file) || other.file == file)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.xmlDocument, xmlDocument) || other.xmlDocument == xmlDocument)&&const DeepCollectionEquality().equals(other._apiModels, _apiModels)&&const DeepCollectionEquality().equals(other._apiModelsFiltered, _apiModelsFiltered)&&(identical(other.xml, xml) || other.xml == xml)&&(identical(other.infoMex, infoMex) || other.infoMex == infoMex));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParserXmlState&&(identical(other.status, status) || other.status == status)&&(identical(other.file, file) || other.file == file)&&const DeepCollectionEquality().equals(other.fileBytes, fileBytes)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.xmlDocument, xmlDocument) || other.xmlDocument == xmlDocument)&&const DeepCollectionEquality().equals(other._apiModels, _apiModels)&&const DeepCollectionEquality().equals(other._apiModelsFiltered, _apiModelsFiltered)&&(identical(other.xml, xml) || other.xml == xml)&&(identical(other.infoMex, infoMex) || other.infoMex == infoMex));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,file,fileName,xmlDocument,const DeepCollectionEquality().hash(_apiModels),const DeepCollectionEquality().hash(_apiModelsFiltered),xml,infoMex);
+int get hashCode => Object.hash(runtimeType,status,file,const DeepCollectionEquality().hash(fileBytes),fileName,xmlDocument,const DeepCollectionEquality().hash(_apiModels),const DeepCollectionEquality().hash(_apiModelsFiltered),xml,infoMex);
 
 @override
 String toString() {
-  return 'ParserXmlState(status: $status, file: $file, fileName: $fileName, xmlDocument: $xmlDocument, apiModels: $apiModels, apiModelsFiltered: $apiModelsFiltered, xml: $xml, infoMex: $infoMex)';
+  return 'ParserXmlState(status: $status, file: $file, fileBytes: $fileBytes, fileName: $fileName, xmlDocument: $xmlDocument, apiModels: $apiModels, apiModelsFiltered: $apiModelsFiltered, xml: $xml, infoMex: $infoMex)';
 }
 
 
@@ -277,7 +279,7 @@ abstract mixin class _$ParserXmlStateCopyWith<$Res> implements $ParserXmlStateCo
   factory _$ParserXmlStateCopyWith(_ParserXmlState value, $Res Function(_ParserXmlState) _then) = __$ParserXmlStateCopyWithImpl;
 @override @useResult
 $Res call({
- ParserXmlStatus status, File? file, String? fileName, XmlDocument? xmlDocument, List<ApiModel>? apiModels, List<ApiModel>? apiModelsFiltered, String? xml, InfoMex? infoMex
+ ParserXmlStatus status, File? file, Uint8List? fileBytes, String? fileName, XmlDocument? xmlDocument, List<ApiModel>? apiModels, List<ApiModel>? apiModelsFiltered, String? xml, InfoMex? infoMex
 });
 
 
@@ -294,11 +296,12 @@ class __$ParserXmlStateCopyWithImpl<$Res>
 
 /// Create a copy of ParserXmlState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? file = freezed,Object? fileName = freezed,Object? xmlDocument = freezed,Object? apiModels = freezed,Object? apiModelsFiltered = freezed,Object? xml = freezed,Object? infoMex = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? file = freezed,Object? fileBytes = freezed,Object? fileName = freezed,Object? xmlDocument = freezed,Object? apiModels = freezed,Object? apiModelsFiltered = freezed,Object? xml = freezed,Object? infoMex = freezed,}) {
   return _then(_ParserXmlState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ParserXmlStatus,file: freezed == file ? _self.file : file // ignore: cast_nullable_to_non_nullable
-as File?,fileName: freezed == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
+as File?,fileBytes: freezed == fileBytes ? _self.fileBytes : fileBytes // ignore: cast_nullable_to_non_nullable
+as Uint8List?,fileName: freezed == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
 as String?,xmlDocument: freezed == xmlDocument ? _self.xmlDocument : xmlDocument // ignore: cast_nullable_to_non_nullable
 as XmlDocument?,apiModels: freezed == apiModels ? _self._apiModels : apiModels // ignore: cast_nullable_to_non_nullable
 as List<ApiModel>?,apiModelsFiltered: freezed == apiModelsFiltered ? _self._apiModelsFiltered : apiModelsFiltered // ignore: cast_nullable_to_non_nullable

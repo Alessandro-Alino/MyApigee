@@ -353,6 +353,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.3.3"
+  file_saver:
+    dependency: "direct main"
+    description:
+      name: file_saver
+      sha256: "9d93db09bd4da9e43238f9dd485360fc51a5c138eea5ef5f407ec56e58079ac0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   fixnum:
     dependency: transitive
     description:
@@ -1106,6 +1114,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  universal_io:
+    dependency: "direct main"
+    description:
+      name: universal_io
+      sha256: "1722b2dcc462b4b2f3ee7d188dad008b6eb4c40bbd03a3de451d82c78bba9aad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.2"
   url_launcher:
     dependency: transitive
     description:

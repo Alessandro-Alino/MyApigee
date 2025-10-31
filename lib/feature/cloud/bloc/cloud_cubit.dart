@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'package:file_saver/file_saver.dart';
+import 'package:universal_io/io.dart';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -37,6 +38,35 @@ class CloudCubit extends Cubit<CloudState> {
         mex: '[CLOUD_BLOC] Errore nel recupero dei file: $e',
         type: MexType.error,
       );
+    }
+  }
+
+  // Download
+  Future<void> downloadFile(FileObject file) async {
+    try {
+      emit(state.copyWith(isNetworking: true, networkingFileId: file.id));
+      final fileBytes = await cloudRepo.downloadFile(file.name);
+      //download File on WEB
+      final download = await FileSaver.instance.saveFile(
+        name: file.name,
+        bytes: fileBytes,
+      );
+      log('Result download: $download');
+      // Download Complete
+      emit(
+        state.copyWith(
+          isNetworking: false,
+          networkingFileId: null,
+          networkinProgress: 0.0,
+        ),
+      );
+      _showMex(mex: 'Download Completato', type: MexType.success);
+    } on DioException catch (e) {
+      log('[DIO_EXPT] Errore durante il download: $e');
+      _networkingError('[DIO_EXPT] Errore durante il download: $e');
+    } catch (e) {
+      log('[CLOUD_BLOC] Errore durante il download: $e');
+      _networkingError('[CLOUD_BLOC] Errore durante il download: $e');
     }
   }
 
@@ -86,7 +116,7 @@ class CloudCubit extends Cubit<CloudState> {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       final File file = File(result.files.single.path!);
-      final String fileName = file.path.split('\\').last;
+      final String fileName = result.files.single.name;
 
       emit(
         state.copyWith(
