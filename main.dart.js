@@ -94481,7 +94481,7 @@ p=4
 l=n.a.at
 l===$&&A.a()
 s=7
-return A.Q(l.Bk("").ate(0,"uploads"),$async$BU)
+return A.Q(l.Bk("apigee-backups").ate(0,"uploads"),$async$BU)
 case 7:j=b
 p=2
 s=6
@@ -94509,7 +94509,7 @@ s=p}while(true)switch(s){case 0:p=4
 k=n.a.at
 k===$&&A.a()
 s=7
-return A.Q(k.Bk("").AU(0,"uploads/"+a),$async$l2)
+return A.Q(k.Bk("apigee-backups").AU(0,"uploads/"+a),$async$l2)
 case 7:m=c
 q=m
 s=1
@@ -94536,7 +94536,7 @@ s=p}while(true)switch(s){case 0:p=4
 l=n.a.at
 l===$&&A.a()
 s=7
-return A.Q(l.Bk("").D7("uploads/"+a,b,B.NA),$async$D8)
+return A.Q(l.Bk("apigee-backups").D7("uploads/"+a,b,B.NA),$async$D8)
 case 7:q=a
 s=1
 break
@@ -94562,7 +94562,7 @@ s=p}while(true)switch(s){case 0:p=4
 k=n.a.at
 k===$&&A.a()
 s=7
-return A.Q(k.Bk("").I(0,A.b(["uploads/"+a],t.s)),$async$m_)
+return A.Q(k.Bk("apigee-backups").I(0,A.b(["uploads/"+a],t.s)),$async$m_)
 case 7:m=c
 q=m
 s=1
@@ -106891,30 +106891,30 @@ s($,"bdd","aWm",()=>{var q=null
 return A.tn(q,A.aKy(B.al,q,q,B.mi),q)})
 s($,"bdc","aWl",()=>{var q=null
 return A.tn(q,A.aKy(B.ao,q,q,B.mi),q)})
-s($,"bdn","aWo",()=>{var q,p,o,n,m,l,k,j,i,h,g=null,f="/rest/v1",e="/auth/v1",d="/storage/v1",c="Initialize with headers: "
+s($,"bdn","aWo",()=>{var q,p,o,n,m,l,k,j,i,h,g=null,f="sb_publishable_osnEMTQRc9Kl__4V70SqcA_9MN46d-I",e="Initialize with headers: ",d="https://pyrikhjtzdddsicpnewe.supabase.co/rest/v1",c="https://pyrikhjtzdddsicpnewe.supabase.co/auth/v1",b="https://pyrikhjtzdddsicpnewe.supabase.co/storage/v1"
 A.bb4()
 q=A.kW("supabase.supabase")
-p=B.c.awe("/realtime/v1","http","ws")
+p=B.c.awe("https://pyrikhjtzdddsicpnewe.supabase.co/realtime/v1","http","ws")
 o=t.N
 n=A.dT($.aWq(),o,o)
 m=new A.axv()
 m.kr(0)
-m=new A.Xe("",f,p,e,d,"/functions/v1",n,m,new A.adb(),q)
+m=new A.Xe(f,d,p,c,b,"https://pyrikhjtzdddsicpnewe.supabase.co/functions/v1",n,m,new A.adb(),q)
 l=A.dT(n,o,o)
-l.m(0,"apikey","")
-l.m(0,"Authorization","Bearer ")
+l.m(0,"apikey",f)
+l.m(0,"Authorization","Bearer sb_publishable_osnEMTQRc9Kl__4V70SqcA_9MN46d-I")
 k=A.ar("ue")
 j=A.aOP(!1,k)
 k=A.aOP(!0,k)
 i=A.kW("supabase.auth")
 h=A.dT(B.ZO,o,o)
 h.P(0,l)
-l=new A.ahR(e,h,g,j,k,B.o7,i)
+l=new A.ahR(c,h,g,j,k,B.o7,i)
 l.w=!0
 l.gO5()
-i.vj("Initialize GoTrueClient v2.16.0 with url: /auth/v1, autoRefreshToken: true, flowType: "+B.o7.k(0)+", tickDuration: "+B.l4.k(0)+", tickThreshold: 3")
-i.Bg(c+h.k(0))
-k=new A.ahO(e,h,g)
+i.vj("Initialize GoTrueClient v2.16.0 with url: https://pyrikhjtzdddsicpnewe.supabase.co/auth/v1, autoRefreshToken: true, flowType: "+B.o7.k(0)+", tickDuration: "+B.l4.k(0)+", tickThreshold: 3")
+i.Bg(e+h.k(0))
+k=new A.ahO(c,h,g)
 k.gaa5()
 k.e!==$&&A.b6()
 k.e=new A.ahP()
@@ -106930,25 +106930,25 @@ l.tF()
 l.afs()
 m.Q=l
 l=A.b_W()
-m.z=new A.Mj(l,"",m.gaaz())
+m.z=new A.Mj(l,f,m.gaaz())
 l=A.dT(n,o,o)
 m.gya()
 k=m.gRb()
 j=A.kW("supabase.postgrest")
 i=A.dT(B.ZN,o,o)
 i.P(0,l)
-j.vj("Initialize PostgrestClient with url: /rest/v1, schema: public")
-j.Bg(c+l.k(0))
+j.vj("Initialize PostgrestClient with url: https://pyrikhjtzdddsicpnewe.supabase.co/rest/v1, schema: public")
+j.Bg(e+l.k(0))
 m.ay!==$&&A.b6()
-m.ay=new A.apm(f,i,"public",k,!0,j)
+m.ay=new A.apm(d,i,"public",k,!0,j)
 l=A.dT(n,o,o)
 m.gya()
 k=m.gRb()
 j=A.kW("supabase.functions")
 i=A.dT(B.ZQ,o,o)
 i.P(0,l)
-j.vj("Initialize FunctionsClient v2.5.0 with url '/functions/v1' and region 'null'")
-j.Bg(c+l.k(0))
+j.vj("Initialize FunctionsClient v2.5.0 with url 'https://pyrikhjtzdddsicpnewe.supabase.co/functions/v1' and region 'null'")
+j.Bg(e+l.k(0))
 m.as!==$&&A.b6()
 m.as=new A.ahl(i,k,!0,j)
 l=A.dT(n,o,o)
@@ -106956,15 +106956,15 @@ k=m.gya()
 j=A.kW("supabase.storage")
 i=A.dT(B.ZR,o,o)
 i.P(0,l)
-h=new A.auU(0,j,d,i)
-h.a6w(d,i,k)
-j.vj("Initialize SupabaseStorageClient v2.4.1 with url: /storage/v1, retryAttempts: 0")
-j.Bg(c+l.k(0))
+h=new A.auU(0,j,b,i)
+h.a6w(b,i,k)
+j.vj("Initialize SupabaseStorageClient v2.4.1 with url: https://pyrikhjtzdddsicpnewe.supabase.co/storage/v1, retryAttempts: 0")
+j.Bg(e+l.k(0))
 m.at!==$&&A.b6()
 m.at=h
-h=A.aC(["apikey",""],o,t.z)
+h=A.aC(["apikey",f],o,t.z)
 o=A.t(o,o)
-o.m(0,"apikey","")
+o.m(0,"apikey",f)
 o.P(0,n)
 n=m.gya()
 p=A.b4n(p,g,o,n,g,h,B.l4)
