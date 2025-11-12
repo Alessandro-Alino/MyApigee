@@ -26,56 +26,62 @@ class _CreateApiPageState extends State<CreateApiPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CreateApiCubit, CreateApiState>(
-      listener: (context, state) {
-        // InfoMex
-        if (state.infoMex != null) {
-          context.appSnackBar(infoMex: state.infoMex!);
-        }
-        // If result is not null, set the result to the textfield
-        if (state.result != null) {
-          _resultApiCntrl.text = state.result ?? '';
-        }
-      },
-      builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            spacing: 8.0,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // TextField for API
-              const Text('Insert the List of API'),
-              Expanded(
-                flex: 1,
-                child: CreateApiTextfield(controller: _createApiCntrl),
-              ),
-              // Button for Create API
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+    return Center(
+      child: Container(
+
+        constraints: BoxConstraints(maxWidth: 1200.0),
+        child: BlocConsumer<CreateApiCubit, CreateApiState>(
+          listener: (context, state) {
+            // InfoMex
+            if (state.infoMex != null) {
+              context.appSnackBar(infoMex: state.infoMex!);
+            }
+            // If result is not null, set the result to the textfield
+            if (state.result != null) {
+              _resultApiCntrl.text = state.result ?? '';
+            }
+          },
+          builder: (context, state) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                spacing: 8.0,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: ActionChip(
-                      onPressed: () {
-                        context.read<CreateApiCubit>().extractEndpoint(
-                          _createApiCntrl.text,
-                        );
-                      },
-                      label: const Text('Create API'),
-                    ),
+                  // TextField for API
+                  const Text('Insert the List of API'),
+                  Expanded(
+                    flex: 1,
+                    child: CreateApiTextfield(controller: _createApiCntrl),
+                  ),
+                  // Button for Create API
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Flexible(
+                        child: ActionChip(
+                          onPressed: () {
+                            context.read<CreateApiCubit>().extractEndpoint(
+                              _createApiCntrl.text,
+                            );
+                          },
+                          label: const Text('Create API'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // TextField for Result API
+                  const Text('Result:'),
+                  Expanded(
+                    flex: 2,
+                    child: CreateApiTextfield(controller: _resultApiCntrl),
                   ),
                 ],
               ),
-              // TextField for Result API
-              const Text('Result:'),
-              Expanded(
-                flex: 2,
-                child: CreateApiTextfield(controller: _resultApiCntrl),
-              ),
-            ],
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ),
     );
   }
 }

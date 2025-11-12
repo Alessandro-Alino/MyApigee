@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @title_app.
   ///
   /// In it, this message translates to:
-  /// **'My Song'**
+  /// **'My Apigee'**
   String get title_app;
 
   /// No description provided for @yes.

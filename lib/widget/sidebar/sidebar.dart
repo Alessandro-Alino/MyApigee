@@ -17,14 +17,14 @@ class _SideBarState extends State<SideBar> {
     return BlocBuilder<SidebarCubit, bool>(
       builder: (context, state) {
         return AnimatedContainer(
-          width: state ? 250.0 : 70.0,
+          width: state ? 250.0 : 62.0,
           curve: Curves.easeInOut,
           duration: const Duration(milliseconds: 500),
           decoration: BoxDecoration(
             color: Colors.blueGrey.shade700,
             borderRadius: BorderRadius.circular(16.0),
           ),
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(4.0),
           child: Column(
             children: [
               // Button Open / Close the SideBar.

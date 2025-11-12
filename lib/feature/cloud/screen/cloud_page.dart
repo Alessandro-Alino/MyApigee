@@ -13,26 +13,31 @@ class CloudPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Column(
-        children: [
-          // TopBar
-          CloudTopBar(),
-          // File List
-          BlocListener<CloudCubit, CloudState>(
-            listener: (context, state) {
-              // InfoMex
-              if (state.infoMex != null) {
-                context.appSnackBar(infoMex: state.infoMex!);
-              }
-            },
-            child: Expanded(child: CloudFileList()),
+    return Center(
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 1200.0),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Column(
+            children: [
+              // TopBar
+              CloudTopBar(),
+              // File List
+              BlocListener<CloudCubit, CloudState>(
+                listener: (context, state) {
+                  // InfoMex
+                  if (state.infoMex != null) {
+                    context.appSnackBar(infoMex: state.infoMex!);
+                  }
+                },
+                child: Expanded(child: CloudFileList()),
+              ),
+            ],
           ),
-        ],
-      ),
 
-      floatingActionButton: CloudUploadBottomBar(),
+          floatingActionButton: CloudUploadBottomBar(),
+        ),
+      ),
     );
   }
 }

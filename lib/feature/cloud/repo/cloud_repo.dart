@@ -31,7 +31,7 @@ class CloudRepo {
     return response;
   }
 
-  // Download file frpm get the URL of a file in the bucket
+  // Download file from get the URL of a file in the bucket
   Future<String> getFileUrl(String fileName) async {
     try {
       final url = await _supabase.storage

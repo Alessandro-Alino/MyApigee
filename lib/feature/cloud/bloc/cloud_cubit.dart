@@ -42,7 +42,7 @@ class CloudCubit extends Cubit<CloudState> {
   }
 
   // Download
-  Future<void> downloadFile(FileObject file) async {
+  Future<void> downloadFileFromWeb(FileObject file) async {
     try {
       emit(state.copyWith(isNetworking: true, networkingFileId: file.id));
       final fileBytes = await cloudRepo.downloadFile(file.name);
@@ -136,7 +136,7 @@ class CloudCubit extends Cubit<CloudState> {
     );
   }
 
-  // Upload with Progress
+  // Upload
   Future<void> uploadFile() async {
     // If no file, return
     if (state.selectedFileUpload == null) {
@@ -148,7 +148,7 @@ class CloudCubit extends Cubit<CloudState> {
       if (fileName != null && bytes != null) {
         try {
           emit(state.copyWith(isNetworking: true));
-          final fileURL = await cloudRepo.uploadFile(fileName, bytes);
+          final fileURL = await cloudRepo.uploadFile('$fileName.txt', bytes);
           log('[CLOUD_BLOC] REPO_UPLOAD: $fileURL');
           // Upload Complete
           loadFiles();

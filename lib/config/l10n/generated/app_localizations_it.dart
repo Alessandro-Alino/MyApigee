@@ -9,7 +9,7 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
-  String get title_app => 'My Song';
+  String get title_app => 'My Apigee';
 
   @override
   String get yes => 'Si';

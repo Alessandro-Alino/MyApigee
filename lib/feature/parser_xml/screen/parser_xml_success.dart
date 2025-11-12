@@ -37,7 +37,6 @@ class ParserXmlSuccess extends StatelessWidget {
                               child: Container(
                                 margin: const EdgeInsets.all(4.0),
                                 padding: const EdgeInsets.all(12.0),
-                                constraints: BoxConstraints(maxWidth: 800.0),
                                 decoration: BoxDecoration(
                                   color: apiModel.method.color.withAlpha(150),
                                   borderRadius: BorderRadius.circular(8.0),
