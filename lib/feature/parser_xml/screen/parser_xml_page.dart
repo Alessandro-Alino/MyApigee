@@ -14,50 +14,52 @@ class ParserXmlPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(maxWidth: 1200.0),
-      child: BlocConsumer<ParserXmlCubit, ParserXmlState>(
-        listener: (context, state) {
-          // InfoMex
-          if (state.infoMex != null) {
-            context.appSnackBar(infoMex: state.infoMex!);
-          }
-        },
-        builder: (context, state) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Reset Btn
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8.0,
-                  horizontal: 16.0,
+    return Center(
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 1200.0),
+        child: BlocConsumer<ParserXmlCubit, ParserXmlState>(
+          listener: (context, state) {
+            // InfoMex
+            if (state.infoMex != null) {
+              context.appSnackBar(infoMex: state.infoMex!);
+            }
+          },
+          builder: (context, state) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Reset Btn
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 16.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton.outlined(
+                        onPressed: () => context.read<ParserXmlCubit>().init(),
+                        icon: Icon(Icons.refresh_rounded),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton.outlined(
-                      onPressed: () => context.read<ParserXmlCubit>().init(),
-                      icon: Icon(Icons.refresh_rounded),
-                    ),
-                  ],
-                ),
-              ),
-              // Status
-              switch (state.status) {
-                // Initial
-                ParserXmlStatus.initial => ParserXmlInitial(),
-                //Selected
-                ParserXmlStatus.selected => ParserXmlSelected(),
-                // Loading
-                ParserXmlStatus.loading => AppLoading(),
-                // Success
-                ParserXmlStatus.success => ParserXmlSuccess(),
-              },
-            ],
-          );
-        },
+                // Status
+                switch (state.status) {
+                  // Initial
+                  ParserXmlStatus.initial => ParserXmlInitial(),
+                  //Selected
+                  ParserXmlStatus.selected => ParserXmlSelected(),
+                  // Loading
+                  ParserXmlStatus.loading => AppLoading(),
+                  // Success
+                  ParserXmlStatus.success => ParserXmlSuccess(),
+                },
+              ],
+            );
+          },
+        ),
       ),
     );
   }

@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
               color: Colors.blueGrey.shade900,
               borderRadius: BorderRadius.circular(16.0),
             ),
-            constraints: BoxConstraints(maxWidth: 1500.0),
+            constraints: BoxConstraints(maxWidth: 2000.0),
             child: Row(
               children: [
                 // SideBar
