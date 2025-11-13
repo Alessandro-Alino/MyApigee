@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapigee/feature/cloud/bloc/cloud_cubit.dart';
+import 'package:myapigee/widget/snackbar/app_snackbar.dart';
+import 'package:myapigee/widget/snackbar/model/info_mex_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ActionButton extends StatelessWidget {
@@ -20,15 +23,42 @@ class ActionButton extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       itemBuilder: (context) {
         return [
-          // Download File with Progress
+          // Download
+          !kIsWeb?
           PopupMenuItem(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             onTap: () {
-              context.read<CloudCubit>().downloadFileWithProgress(file);
+              if (!kIsWeb) {
+                context.read<CloudCubit>().downloadFileWithProgress(file);
+              } else {
+                context.appSnackBar(
+                  infoMex: InfoMex(mex: 'Not from Web', type: MexType.warning),
+                );
+              }
             },
             child: ListTile(
               leading: const Icon(Icons.download, color: Colors.white),
               title: const Text('Download'),
+            ),
+          ):
+          // Download File from Web
+          PopupMenuItem(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            onTap: () {
+              if (kIsWeb) {
+                context.read<CloudCubit>().downloadFileFromWeb(file);
+              } else {
+                context.appSnackBar(
+                  infoMex: InfoMex(mex: 'Only from Web', type: MexType.warning),
+                );
+              }
+            },
+            child: ListTile(
+              leading: const Icon(
+                Icons.laptop_chromebook_rounded,
+                color: Colors.white,
+              ),
+              title: const Text('Download Web'),
             ),
           ),
           // Delete File
