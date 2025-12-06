@@ -29,8 +29,8 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
       final Uint8List? fileBytes = result.files.single.bytes;
 
       if (fileBytes == null) {
-        log('No FileBytes');
-        log('FILE: ${result.files.single}');
+        // log('No FileBytes');
+        // log('FILE: ${result.files.single}');
       }
       emit(
         state.copyWith(
@@ -50,15 +50,13 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
     String? file;
 
     if (kIsWeb) {
-      log('WEB');
       if (kIsWasm) {
-        log('WEB - WASM');
+        //log('WEB - WASM');
       }
       if (state.fileBytes != null) {
         file = utf8.decode(state.fileBytes!);
       }
     } else {
-      log('NOT - WEB');
       if (state.file != null) {
         file = state.file!.readAsStringSync();
       }
@@ -93,6 +91,22 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
   List<ApiModel> _extractApi(XmlDocument xmlDocument) {
     final List<ApiModel> apiModels = [];
 
+    // Find Basepath
+    final basePathElement = xmlDocument.findAllElements('BasePath').firstOrNull;
+    if (basePathElement != null) {
+      // 3. Estrai il testo
+      final basepath = basePathElement.innerText;
+      emit(state.copyWith(basepath: basepath));
+    } else {
+      _showMex(mex: 'Nessun basepath trovato', type: MexType.error);
+    }
+
+    // Find Basepath
+    xmlDocument.nodes.map((e){
+      log(e.toString());
+    });
+
+        // Find all <Flow> elements
     xmlDocument.findAllElements('Flow').forEach((flow) {
       // Name API
       final nameApiReg = RegExp('<Flow\\s+name="([^"]+)"');
@@ -107,7 +121,7 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
       final methodz = methodReg.firstMatch(flow.outerXml)?.group(1);
 
       if (nameApi == 'notFound') {
-        // log('Found the "notFound API"');
+        // Found the "notFound API"
         return;
       } else {
         // If method is not null, add it to the list
@@ -132,16 +146,75 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
   // Filter API by Method
   void filterByMethod(Method? method, {bool? reset = false}) {
     // If no API, return
-    if (state.apiModels == null) {
+    if (state.apiModels.isEmpty) {
       return;
     } else if (reset == true || method == null) {
       emit(state.copyWith(apiModelsFiltered: state.apiModels));
     } else {
       // Else filter API by Method
-      List<ApiModel> apiModelsFiltered = state.apiModels!
+      List<ApiModel> apiModelsFiltered = state.apiModels
           .where((e) => e.method == method)
           .toList();
       emit(state.copyWith(apiModelsFiltered: apiModelsFiltered));
+    }
+  }
+
+  // Toggle Select Mode
+  void toggleSelectMode(bool selectedMode) {
+    emit(state.copyWith(isSelectMode: selectedMode, apiToExport: []));
+  }
+
+  // Select Api to Export
+  void selectAPItoExport(ApiModel apiModel) {
+    List<ApiModel> apiToExport = List.from(state.apiToExport ?? []);
+
+    if (apiToExport.contains(apiModel)) {
+      apiToExport.remove(apiModel);
+    } else {
+      apiToExport.add(apiModel);
+    }
+    emit(state.copyWith(apiToExport: apiToExport));
+  }
+
+  // Export in Postman Collection
+  Future<void> exportPostman(List<ApiModel> apiList) async {
+    final postmanCollection = {
+      "info": {
+        "name": "Import_API",
+        "schema":
+            "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      },
+      "item": [
+        {
+          "name": "Test 1",
+          "item": apiList.map((e) {
+            return {
+              "name": e.api.replaceAll('*', '{id}'),
+              "request": {
+                "method": e.method.name.toUpperCase(),
+                "header": [],
+                "url": {
+                  "raw": "{{hostname}}${state.basepath}${e.api}",
+                  "protocol": "https",
+                  "host": ["{{hostname}}"],
+                  "path": [
+                    state.basepath,
+                    ...e.api.split('/').where((e) => e.isNotEmpty),
+                  ],
+                },
+              },
+              "response": [],
+            };
+          }).toList(),
+        },
+      ],
+    };
+
+    final content = jsonEncode(postmanCollection);
+    if (!kIsWeb) {
+      log(content);
+    } else {
+      // Download Postman Collection from Web
     }
   }
 

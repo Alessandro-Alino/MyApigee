@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:myapigee/feature/cloud/repo/error_interceptor.dart';
 
 class AppDio {
   // Istanza singleton
@@ -19,16 +20,20 @@ class AppDio {
           sendTimeout: Duration(seconds: 10),
         ),
       ) {
-    // // Aggiungi interceptor per logging, error handling, ecc.
-    // dio.interceptors.add(
-    //   LogInterceptor(
-    //     request: true,
-    //     requestHeader: true,
-    //     requestBody: true,
-    //     responseHeader: true,
-    //     responseBody: true,
-    //     error: true,
-    //   ),
-    // );
+    // Error handling interceptor
+    dio.interceptors.add(
+      ErrorInterceptor(),
+    );
+    // Log Interceptor
+    dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+      ),
+    );
   }
 }

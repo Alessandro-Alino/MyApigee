@@ -1,4 +1,5 @@
 import 'package:file_saver/file_saver.dart';
+import 'package:myapigee/feature/cloud/repo/error_interceptor.dart';
 import 'package:universal_io/io.dart';
 import 'dart:developer';
 import 'package:dio/dio.dart';
@@ -62,11 +63,15 @@ class CloudCubit extends Cubit<CloudState> {
       );
       _showMex(mex: 'Download Completato', type: MexType.success);
     } on DioException catch (e) {
+      final String dioErr = dioErrMex(e);
       log('[DIO_EXPT] Errore durante il download: $e');
-      _networkingError('[DIO_EXPT] Errore durante il download: $e');
+      _showMex(mex: dioErr, type: MexType.error);
     } catch (e) {
       log('[CLOUD_BLOC] Errore durante il download: $e');
-      _networkingError('[CLOUD_BLOC] Errore durante il download: $e');
+      _showMex(
+        mex: '[CLOUD_BLOC] Errore durante il download: $e',
+        type: MexType.error,
+      );
     }
   }
 
@@ -98,16 +103,21 @@ class CloudCubit extends Cubit<CloudState> {
         );
         _showMex(mex: 'Download Completato', type: MexType.success);
       } else {
-        _networkingError(
-          '[CLOUD_BLOC] Errore nel download del file. (No Download PATH):',
+        _showMex(
+          mex: '[CLOUD_BLOC] Errore nel download del file. (No Download PATH):',
+          type: MexType.error,
         );
       }
     } on DioException catch (e) {
+      final String dioErr = dioErrMex(e);
       log('[DIO_EXPT] Errore durante il download: $e');
-      _networkingError('[DIO_EXPT] Errore durante il download: $e');
+      _showMex(mex: dioErr, type: MexType.error);
     } catch (e) {
       log('[CLOUD_BLOC] Errore durante il download: $e');
-      _networkingError('[CLOUD_BLOC] Errore durante il download: $e');
+      _showMex(
+        mex: '[CLOUD_BLOC] Errore durante il download: $e',
+        type: MexType.error,
+      );
     }
   }
 
@@ -148,7 +158,7 @@ class CloudCubit extends Cubit<CloudState> {
       if (fileName != null && bytes != null) {
         try {
           emit(state.copyWith(isNetworking: true));
-          final fileURL = await cloudRepo.uploadFile('$fileName.txt', bytes);
+          final fileURL = await cloudRepo.uploadFile(fileName, bytes);
           log('[CLOUD_BLOC] REPO_UPLOAD: $fileURL');
           // Upload Complete
           loadFiles();
@@ -156,17 +166,24 @@ class CloudCubit extends Cubit<CloudState> {
           _showMex(mex: 'Upload Completato', type: MexType.success);
           emit(state.copyWith(isNetworking: false));
         } on DioException catch (e) {
-          log('[DIO_EXPT] Errore durante l\'upload: $e');
           deselectFileUpload();
-          _networkingError('[DIO_EXPT] Errore durante  l\'upload: $e');
+          final String dioErr = dioErrMex(e);
+          log('[DIO_EXPT] Errore durante  l\'upload: $e');
+          _showMex(mex: dioErr, type: MexType.error);
         } catch (e) {
           log('[CLOUD_BLOC] Errore durante  l\'upload: $e');
           deselectFileUpload();
-          _networkingError('[CLOUD_BLOC] Errore durante  l\'upload: $e');
+          _showMex(
+            mex: '[CLOUD_BLOC] Errore durante  l\'upload: $e',
+            type: MexType.error,
+          );
         }
       } else {
         deselectFileUpload();
-        _networkingError('[CLOUD_BLOC] Errore generico durante l\'upload');
+        _showMex(
+          mex: '[CLOUD_BLOC] Errore generico durante l\'upload',
+          type: MexType.error,
+        );
       }
     }
   }
@@ -187,21 +204,6 @@ class CloudCubit extends Cubit<CloudState> {
     }
   }
 
-  // Networking Error
-  _networkingError(String error) {
-    emit(
-      state.copyWith(
-        infoMex: InfoMex(mex: error, type: MexType.error),
-        isNetworking: false,
-        networkingFileId: null,
-        networkinProgress: 0.0,
-      ),
-    );
-    Future.delayed(const Duration(seconds: 2), () {
-      emit(state.copyWith(status: _preStatus, infoMex: null));
-    });
-  }
-
   // Loading State
   void _loading() {
     _preStatus = state.status;
@@ -213,6 +215,9 @@ class CloudCubit extends Cubit<CloudState> {
     emit(
       state.copyWith(
         infoMex: InfoMex(mex: mex, type: type),
+        isNetworking: false,
+        networkingFileId: null,
+        networkinProgress: 0.0,
       ),
     );
     Future.delayed(const Duration(seconds: 2), () {
