@@ -102,11 +102,11 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
     }
 
     // Find Basepath
-    xmlDocument.nodes.map((e){
+    xmlDocument.nodes.map((e) {
       log(e.toString());
     });
 
-        // Find all <Flow> elements
+    // Find all <Flow> elements
     xmlDocument.findAllElements('Flow').forEach((flow) {
       // Name API
       final nameApiReg = RegExp('<Flow\\s+name="([^"]+)"');
@@ -148,14 +148,26 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
     // If no API, return
     if (state.apiModels.isEmpty) {
       return;
-    } else if (reset == true || method == null) {
+    }
+    // If no method, return all API
+    else if (reset == true || method == null) {
       emit(state.copyWith(apiModelsFiltered: state.apiModels));
-    } else {
-      // Else filter API by Method
+    }
+    // Else filter API by Method
+    else {
+      // Filter API list by Method
       List<ApiModel> apiModelsFiltered = state.apiModels
           .where((e) => e.method == method)
           .toList();
-      emit(state.copyWith(apiModelsFiltered: apiModelsFiltered));
+      // If click on the method that is arleady selected, return all API
+      if (state.apiModelsFiltered.length != state.apiModels.length &&
+          method==state.apiModelsFiltered.first.method) {
+        emit(state.copyWith(apiModelsFiltered: state.apiModels));
+      }
+      // Return filtered API
+      else {
+        emit(state.copyWith(apiModelsFiltered: apiModelsFiltered));
+      }
     }
   }
 

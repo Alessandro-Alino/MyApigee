@@ -24,8 +24,4 @@ const _$MethodEnumMap = {
   Method.put: 'put',
   Method.patch: 'patch',
   Method.delete: 'delete',
-  Method.options: 'options',
-  Method.head: 'head',
-  Method.trace: 'trace',
-  Method.connect: 'connect',
 };

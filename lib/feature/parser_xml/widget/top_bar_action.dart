@@ -44,17 +44,6 @@ class TopBarAction extends StatelessWidget {
               spacing: 16.0,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Reset Filter
-                IconButton(
-                  onPressed: () {
-                    // Filter API by Method
-                    context.read<ParserXmlCubit>().filterByMethod(
-                      null,
-                      reset: true,
-                    );
-                  },
-                  icon: Icon(Icons.refresh_rounded),
-                ),
                 // IconButton Action
                 PopupMenuButton(
                   offset: Offset(-20, 40),
