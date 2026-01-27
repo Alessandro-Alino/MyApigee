@@ -4,8 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:myapigee/feature/parser_xml/export/export.dart';
 import 'package:myapigee/feature/parser_xml/model/api_model.dart';
 import 'package:myapigee/widget/snackbar/model/info_mex_model.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:universal_io/io.dart';
 import 'package:xml/xml.dart';
 
@@ -45,45 +48,48 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
     }
   }
 
-  // Parse XML
-  void parseXml() {
-    String? file;
+  String _getXmlContent({String? providedXml}) {
+    // If user paste XML, return it
+    if (providedXml != null) return providedXml;
 
+    // If user select a file in WASM Web version, return utf8 decode
     if (kIsWeb) {
       if (kIsWasm) {
-        //log('WEB - WASM');
+        log('IS_WASM');
       }
-      if (state.fileBytes != null) {
-        file = utf8.decode(state.fileBytes!);
-      }
-    } else {
-      if (state.file != null) {
-        file = state.file!.readAsStringSync();
-      }
+      final bytes = state.fileBytes;
+      if (bytes != null) return utf8.decode(bytes);
+      return '';
     }
 
-    if (file == null || file.isEmpty) {
+    final file = state.file;
+    return file?.readAsStringSync() ?? '';
+  }
+
+  // Parse XML
+  void parseXml({String? providedXml}) {
+    final xmlContent = _getXmlContent(providedXml: providedXml);
+
+    if (xmlContent.isEmpty) {
       _showMex(mex: 'Nessun file selezionato', type: MexType.error);
-    } else {
-      //final String file = state.file!.readAsStringSync();
-      try {
-        // Get XML doc.
-        final XmlDocument xmlDocument = XmlDocument.parse(file);
-        final String xml = xmlDocument.toXmlString(pretty: true);
-        // Extract API
-        List<ApiModel> apiModels = _extractApi(xmlDocument);
-        emit(
-          state.copyWith(
-            status: ParserXmlStatus.success,
-            xmlDocument: xmlDocument,
-            xml: xml,
-            apiModels: apiModels,
-            apiModelsFiltered: apiModels,
-          ),
-        );
-      } catch (e) {
-        _showMex(mex: 'Errore di parsing XML: $e', type: MexType.error);
-      }
+      return;
+    }
+
+    try {
+      final xmlDocument = XmlDocument.parse(xmlContent);
+      // Extract API
+      List<ApiModel> apiModels = _extractApi(xmlDocument);
+      emit(
+        state.copyWith(
+          status: ParserXmlStatus.success,
+          xmlDocument: xmlDocument,
+          xml: xmlDocument.toXmlString(pretty: true),
+          apiModels: apiModels,
+          apiModelsFiltered: apiModels,
+        ),
+      );
+    } catch (e) {
+      _showMex(mex: 'Errore di parsing XML: $e', type: MexType.error);
     }
   }
 
@@ -161,7 +167,7 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
           .toList();
       // If click on the method that is arleady selected, return all API
       if (state.apiModelsFiltered.length != state.apiModels.length &&
-          method==state.apiModelsFiltered.first.method) {
+          method == state.apiModelsFiltered.first.method) {
         emit(state.copyWith(apiModelsFiltered: state.apiModels));
       }
       // Return filtered API
@@ -189,44 +195,59 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
   }
 
   // Export in Postman Collection
-  Future<void> exportPostman(List<ApiModel> apiList) async {
-    final postmanCollection = {
-      "info": {
-        "name": "Import_API",
-        "schema":
-            "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-      },
-      "item": [
-        {
-          "name": "Test 1",
-          "item": apiList.map((e) {
-            return {
-              "name": e.api.replaceAll('*', '{id}'),
-              "request": {
-                "method": e.method.name.toUpperCase(),
-                "header": [],
-                "url": {
-                  "raw": "{{hostname}}${state.basepath}${e.api}",
-                  "protocol": "https",
-                  "host": ["{{hostname}}"],
-                  "path": [
-                    state.basepath,
-                    ...e.api.split('/').where((e) => e.isNotEmpty),
-                  ],
-                },
-              },
-              "response": [],
-            };
-          }).toList(),
-        },
-      ],
-    };
+  void exportPostman(List<ApiModel> apiList) async {
+    final postmanCollection = Export.postmanCollectionV2(
+      state.basepath!,
+      apiList,
+    );
 
     final content = jsonEncode(postmanCollection);
+    final String fileNameWithExt =
+        "api-001-${state.basepath!.replaceAll("/", "")}.json";
     if (!kIsWeb) {
-      log(content);
+      saveFile(fileNameWithExt, content);
     } else {
       // Download Postman Collection from Web
+    }
+  }
+
+  // Export in Excel
+  void exportExcel(List<ApiModel> apiList) async {
+    final excel = Export().exportExcel(state.basepath!, apiList);
+    final String fileNameWithExt =
+        "api-001-${state.basepath!.replaceAll("/", "")}.xlsx";
+    try {
+      final fileBytes = excel.save()!;
+      var directory = await getDownloadsDirectory();
+
+      // 5. Scrivi il file
+      await File(p.join(directory!.path, fileNameWithExt)).writeAsBytes(fileBytes);
+      _showMex(mex: 'File salvato!', type: MexType.success);
+    } catch (e) {
+      log('Bloc Error: $e');
+      _showMex(mex: 'Qualcosa è andato storto!', type: MexType.error);
+    }
+  }
+
+  // Save file on Directory
+  void saveFile(String fileNameWithExt, String content) async {
+    if (!kIsWeb) {
+      try {
+        // Get Download Directory
+        final directory = await getDownloadsDirectory();
+        // File name
+        String fileName = fileNameWithExt;
+        // Create File
+        final file = File('${directory?.path}\\$fileName');
+        // Download File
+        await file.writeAsString(content);
+        _showMex(mex: 'File salvato!', type: MexType.success);
+      } catch (e) {
+        log('Bloc Error: $e');
+        _showMex(mex: 'Qualcosa è andato storto!', type: MexType.error);
+      }
+    } else {
+      _showMex(mex: 'In Arrivo...', type: MexType.info);
     }
   }
 

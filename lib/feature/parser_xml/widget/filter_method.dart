@@ -9,135 +9,117 @@ class FilterMethod extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80.0,
+      height: 60.0,
       padding: const EdgeInsets.symmetric(horizontal: 6.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
         children: [
-          // Total API Count
-          Flexible(
-            child: Text(
-              'Total API: ${context.read<ParserXmlCubit>().state.apiModels.length}',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          // Filter Method Row
-          SizedBox(
-            height: 50.0,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                // List Method
-                Expanded(
-                  child: BlocBuilder<ParserXmlCubit, ParserXmlState>(
-                    builder: (context, state) {
-                      // If no API, return Container early
-                      if (state.apiModels.isEmpty) {
-                        return const SizedBox.shrink();
-                      }
+          // List Method
+          Expanded(
+            child: BlocBuilder<ParserXmlCubit, ParserXmlState>(
+              builder: (context, state) {
+                // If no API, return Container early
+                if (state.apiModels.isEmpty) {
+                  return const SizedBox.shrink();
+                }
 
-                      // Count API by Method
-                      final methodCounts = {
-                        for (final method in Method.values)
-                          method: state.apiModels
-                              .where((e) => e.method == method)
-                              .length,
-                      };
+                // Count API by Method
+                final methodCounts = {
+                  for (final method in Method.values)
+                    method: state.apiModels
+                        .where((e) => e.method == method)
+                        .length,
+                };
 
-                      // Order Method by count API
-                      final sortedMethods = Method.values.toList()
-                        ..sort((a, b) {
-                          final aHasApi = methodCounts[a]! > 0;
-                          final bHasApi = methodCounts[b]! > 0;
+                // Order Method by count API
+                final sortedMethods = Method.values.toList()
+                  ..sort((a, b) {
+                    final aHasApi = methodCounts[a]! > 0;
+                    final bHasApi = methodCounts[b]! > 0;
 
-                          // Case 1: Both have APIs or both don't have APIs
-                          if (aHasApi == bHasApi) {
-                            return 0; // Maintain original order
-                          }
-                          // Case 2: One has an API, the other doesn't
-                          return aHasApi ? -1 : 1;
-                        });
+                    // Case 1: Both have APIs or both don't have APIs
+                    // maintain original order
+                    if (aHasApi == bHasApi) {
+                      return 0;
+                    }
+                    // One has an API, the other doesn't
+                    return aHasApi ? -1 : 1;
+                  });
 
-                      // Return ListView of Method
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: Method.values.length,
-                        itemBuilder: (context, index) {
-                          final Method method = sortedMethods[index];
-                          // Count API by Method
-                          int apiByMethod = state.apiModels
-                              .where((e) => e.method == method)
-                              .length;
+                // Return ListView of Method
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: Method.values.length,
+                  itemBuilder: (context, index) {
+                    final Method method = sortedMethods[index];
+                    // Count API by Method
+                    int apiByMethod = state.apiModels
+                        .where((e) => e.method == method)
+                        .length;
 
-                          // Show icon if list is filtered
-                          bool isFilteredMethod =
-                              state.apiModelsFiltered.length !=
-                                  state.apiModels.length &&
-                              method == state.apiModelsFiltered.first.method;
+                    // Show icon only for filtered method
+                    bool isFilteredMethod =
+                        state.apiModelsFiltered.length !=
+                            state.apiModels.length &&
+                        method == state.apiModelsFiltered.first.method;
 
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: ActionChip(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 2.0),
-                              label: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                padding: isFilteredMethod
-                                    ? const EdgeInsets.all(2.0)
-                                    : const EdgeInsets.all(0.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    // Title Method
-                                    Text(
-                                      '${method.name.toUpperCase()} - $apiByMethod',
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: ActionChip(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 2.0),
+                        label: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: isFilteredMethod
+                              ? const EdgeInsets.all(2.0)
+                              : const EdgeInsets.all(0.0),
+                          child: Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                            children: [
+                              // Title Method
+                              Text(
+                                '${method.name.toUpperCase()} - $apiByMethod',
+                              ),
+                              // Icon Close if filter by method
+                              if (isFilteredMethod)
+                                Padding(
+                                  padding: const EdgeInsets.only(left:8.0),
+                                  child: CircleAvatar(
+                                    radius: 12.0,
+                                    backgroundColor: Colors.red.shade900.withAlpha(180),
+                                    child: Icon(
+                                      Icons.close,
+                                      size: 12.0,
+                                      color: Colors.white,
                                     ),
-                                    // Icon Close if filter by method
-                                    if (isFilteredMethod)
-                                      Padding(
-                                        padding: const EdgeInsets.only(left:8.0),
-                                        child: CircleAvatar(
-                                          radius: 12.0,
-                                          backgroundColor: Colors.red.shade900.withAlpha(180),
-                                          child: Icon(
-                                            Icons.close,
-                                            size: 12.0,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
+                                  ),
                                 ),
+                            ],
+                          ),
+                        ),
+                        onPressed: apiByMethod == 0
+                            ? null
+                            : () {
+                                // Filter API by Method
+                                context
+                                    .read<ParserXmlCubit>()
+                                    .filterByMethod(method);
+                              },
+                        side: BorderSide(
+                          color: method.color.withAlpha(150),
+                        ),
+                        color: apiByMethod == 0
+                            ? WidgetStatePropertyAll(
+                                Colors.grey.shade900.withAlpha(100),
+                              )
+                            : WidgetStatePropertyAll(
+                                method.color.withAlpha(100),
                               ),
-                              onPressed: apiByMethod == 0
-                                  ? null
-                                  : () {
-                                      // Filter API by Method
-                                      context
-                                          .read<ParserXmlCubit>()
-                                          .filterByMethod(method);
-                                    },
-                              side: BorderSide(
-                                color: method.color.withAlpha(150),
-                              ),
-                              color: apiByMethod == 0
-                                  ? WidgetStatePropertyAll(
-                                      Colors.grey.shade900.withAlpha(100),
-                                    )
-                                  : WidgetStatePropertyAll(
-                                      method.color.withAlpha(100),
-                                    ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],

@@ -26,25 +26,10 @@ class ParserXmlPage extends StatelessWidget {
           },
           builder: (context, state) {
             return Column(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Reset Btn
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8.0,
-                    horizontal: 16.0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton.outlined(
-                        onPressed: () => context.read<ParserXmlCubit>().init(),
-                        icon: Icon(Icons.refresh_rounded),
-                      ),
-                    ],
-                  ),
-                ),
                 // Status
                 switch (state.status) {
                   // Initial
