@@ -18,12 +18,12 @@ class CloudRepo {
   final String _bucketName = const String.fromEnvironment('bucketName');
 
   // Get the list of files in the bucket
-  Future<List<FileObject>> listFiles() async {
+  Future<List<FileObject>> listFiles({String? path}) async {
     List<FileObject> response = [];
     try {
       response = await _supabase.storage
           .from(_bucketName)
-          .list(path: 'uploads');
+          .list(path: path);
     } catch (e) {
       log('CLOUD_REPO_ERROR: Errore nel recupero dei file.\n$e');
       throw Exception('Errore nel recupero dei file: $e');

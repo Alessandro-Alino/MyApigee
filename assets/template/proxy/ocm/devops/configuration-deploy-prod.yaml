@@ -1,0 +1,32 @@
+deployList:
+  repeatableSets:
+    - deploySet:
+        label: prod
+        conciergeCheck:
+          environment: prod
+          tenant: C0
+          artifact:
+            repositoryPath: ocm-generic-group/apigee/OCM/${repo}/${version}/${proxyArchive}
+            name: ${proxyArchive}
+            version: ${version}
+        install:
+          tool:
+            apiProxy:
+              organizations:
+                - {gcpPRD}
+              name: ${proxyName}
+#    - deploySet:
+#        label: prod_ext
+#        conciergeCheck:
+#          environment: prod
+#          tenant: C0
+#          artifact:
+#            repositoryPath: ocm-generic-group/apigee/OCM/${repo}/${version}/${proxyArchive}
+#            name: ${proxyArchive}
+#            version: ${version}
+#        install:
+#          tool:
+#            apiProxy:
+#              organizations:
+#                - {gcpPRDEXT}
+#              name: ${proxyName}

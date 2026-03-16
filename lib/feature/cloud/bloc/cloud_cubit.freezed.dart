@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CloudState {
 
- CloudStatus get status; List<FileObject> get files; bool get isNetworking; double get networkinProgress; String? get networkingFileId; File? get selectedFileUpload; String? get selectedFileUploadName; InfoMex? get infoMex;
+ CloudStatus get status; List<CloudItem> get files; List<String> get breadcrumb; bool get isNetworking; double get networkinProgress; String? get networkingFileId; File? get selectedFileUpload; String? get selectedFileUploadName; InfoMex? get infoMex;
 /// Create a copy of CloudState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CloudStateCopyWith<CloudState> get copyWith => _$CloudStateCopyWithImpl<CloudSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CloudState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.files, files)&&(identical(other.isNetworking, isNetworking) || other.isNetworking == isNetworking)&&(identical(other.networkinProgress, networkinProgress) || other.networkinProgress == networkinProgress)&&(identical(other.networkingFileId, networkingFileId) || other.networkingFileId == networkingFileId)&&(identical(other.selectedFileUpload, selectedFileUpload) || other.selectedFileUpload == selectedFileUpload)&&(identical(other.selectedFileUploadName, selectedFileUploadName) || other.selectedFileUploadName == selectedFileUploadName)&&(identical(other.infoMex, infoMex) || other.infoMex == infoMex));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CloudState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.files, files)&&const DeepCollectionEquality().equals(other.breadcrumb, breadcrumb)&&(identical(other.isNetworking, isNetworking) || other.isNetworking == isNetworking)&&(identical(other.networkinProgress, networkinProgress) || other.networkinProgress == networkinProgress)&&(identical(other.networkingFileId, networkingFileId) || other.networkingFileId == networkingFileId)&&(identical(other.selectedFileUpload, selectedFileUpload) || other.selectedFileUpload == selectedFileUpload)&&(identical(other.selectedFileUploadName, selectedFileUploadName) || other.selectedFileUploadName == selectedFileUploadName)&&(identical(other.infoMex, infoMex) || other.infoMex == infoMex));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(files),isNetworking,networkinProgress,networkingFileId,selectedFileUpload,selectedFileUploadName,infoMex);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(files),const DeepCollectionEquality().hash(breadcrumb),isNetworking,networkinProgress,networkingFileId,selectedFileUpload,selectedFileUploadName,infoMex);
 
 @override
 String toString() {
-  return 'CloudState(status: $status, files: $files, isNetworking: $isNetworking, networkinProgress: $networkinProgress, networkingFileId: $networkingFileId, selectedFileUpload: $selectedFileUpload, selectedFileUploadName: $selectedFileUploadName, infoMex: $infoMex)';
+  return 'CloudState(status: $status, files: $files, breadcrumb: $breadcrumb, isNetworking: $isNetworking, networkinProgress: $networkinProgress, networkingFileId: $networkingFileId, selectedFileUpload: $selectedFileUpload, selectedFileUploadName: $selectedFileUploadName, infoMex: $infoMex)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CloudStateCopyWith<$Res>  {
   factory $CloudStateCopyWith(CloudState value, $Res Function(CloudState) _then) = _$CloudStateCopyWithImpl;
 @useResult
 $Res call({
- CloudStatus status, List<FileObject> files, bool isNetworking, double networkinProgress, String? networkingFileId, File? selectedFileUpload, String? selectedFileUploadName, InfoMex? infoMex
+ CloudStatus status, List<CloudItem> files, List<String> breadcrumb, bool isNetworking, double networkinProgress, String? networkingFileId, File? selectedFileUpload, String? selectedFileUploadName, InfoMex? infoMex
 });
 
 
@@ -62,11 +62,12 @@ class _$CloudStateCopyWithImpl<$Res>
 
 /// Create a copy of CloudState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? files = null,Object? isNetworking = null,Object? networkinProgress = null,Object? networkingFileId = freezed,Object? selectedFileUpload = freezed,Object? selectedFileUploadName = freezed,Object? infoMex = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? files = null,Object? breadcrumb = null,Object? isNetworking = null,Object? networkinProgress = null,Object? networkingFileId = freezed,Object? selectedFileUpload = freezed,Object? selectedFileUploadName = freezed,Object? infoMex = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as CloudStatus,files: null == files ? _self.files : files // ignore: cast_nullable_to_non_nullable
-as List<FileObject>,isNetworking: null == isNetworking ? _self.isNetworking : isNetworking // ignore: cast_nullable_to_non_nullable
+as List<CloudItem>,breadcrumb: null == breadcrumb ? _self.breadcrumb : breadcrumb // ignore: cast_nullable_to_non_nullable
+as List<String>,isNetworking: null == isNetworking ? _self.isNetworking : isNetworking // ignore: cast_nullable_to_non_nullable
 as bool,networkinProgress: null == networkinProgress ? _self.networkinProgress : networkinProgress // ignore: cast_nullable_to_non_nullable
 as double,networkingFileId: freezed == networkingFileId ? _self.networkingFileId : networkingFileId // ignore: cast_nullable_to_non_nullable
 as String?,selectedFileUpload: freezed == selectedFileUpload ? _self.selectedFileUpload : selectedFileUpload // ignore: cast_nullable_to_non_nullable
@@ -166,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CloudStatus status,  List<FileObject> files,  bool isNetworking,  double networkinProgress,  String? networkingFileId,  File? selectedFileUpload,  String? selectedFileUploadName,  InfoMex? infoMex)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CloudStatus status,  List<CloudItem> files,  List<String> breadcrumb,  bool isNetworking,  double networkinProgress,  String? networkingFileId,  File? selectedFileUpload,  String? selectedFileUploadName,  InfoMex? infoMex)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CloudState() when $default != null:
-return $default(_that.status,_that.files,_that.isNetworking,_that.networkinProgress,_that.networkingFileId,_that.selectedFileUpload,_that.selectedFileUploadName,_that.infoMex);case _:
+return $default(_that.status,_that.files,_that.breadcrumb,_that.isNetworking,_that.networkinProgress,_that.networkingFileId,_that.selectedFileUpload,_that.selectedFileUploadName,_that.infoMex);case _:
   return orElse();
 
 }
@@ -187,10 +188,10 @@ return $default(_that.status,_that.files,_that.isNetworking,_that.networkinProgr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CloudStatus status,  List<FileObject> files,  bool isNetworking,  double networkinProgress,  String? networkingFileId,  File? selectedFileUpload,  String? selectedFileUploadName,  InfoMex? infoMex)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CloudStatus status,  List<CloudItem> files,  List<String> breadcrumb,  bool isNetworking,  double networkinProgress,  String? networkingFileId,  File? selectedFileUpload,  String? selectedFileUploadName,  InfoMex? infoMex)  $default,) {final _that = this;
 switch (_that) {
 case _CloudState():
-return $default(_that.status,_that.files,_that.isNetworking,_that.networkinProgress,_that.networkingFileId,_that.selectedFileUpload,_that.selectedFileUploadName,_that.infoMex);}
+return $default(_that.status,_that.files,_that.breadcrumb,_that.isNetworking,_that.networkinProgress,_that.networkingFileId,_that.selectedFileUpload,_that.selectedFileUploadName,_that.infoMex);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -204,10 +205,10 @@ return $default(_that.status,_that.files,_that.isNetworking,_that.networkinProgr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CloudStatus status,  List<FileObject> files,  bool isNetworking,  double networkinProgress,  String? networkingFileId,  File? selectedFileUpload,  String? selectedFileUploadName,  InfoMex? infoMex)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CloudStatus status,  List<CloudItem> files,  List<String> breadcrumb,  bool isNetworking,  double networkinProgress,  String? networkingFileId,  File? selectedFileUpload,  String? selectedFileUploadName,  InfoMex? infoMex)?  $default,) {final _that = this;
 switch (_that) {
 case _CloudState() when $default != null:
-return $default(_that.status,_that.files,_that.isNetworking,_that.networkinProgress,_that.networkingFileId,_that.selectedFileUpload,_that.selectedFileUploadName,_that.infoMex);case _:
+return $default(_that.status,_that.files,_that.breadcrumb,_that.isNetworking,_that.networkinProgress,_that.networkingFileId,_that.selectedFileUpload,_that.selectedFileUploadName,_that.infoMex);case _:
   return null;
 
 }
@@ -219,15 +220,22 @@ return $default(_that.status,_that.files,_that.isNetworking,_that.networkinProgr
 
 
 class _CloudState implements CloudState {
-  const _CloudState({this.status = CloudStatus.initial, final  List<FileObject> files = const [], this.isNetworking = false, this.networkinProgress = 0.0, this.networkingFileId, this.selectedFileUpload, this.selectedFileUploadName, this.infoMex}): _files = files;
+  const _CloudState({this.status = CloudStatus.initial, final  List<CloudItem> files = const [], final  List<String> breadcrumb = const [], this.isNetworking = false, this.networkinProgress = 0.0, this.networkingFileId, this.selectedFileUpload, this.selectedFileUploadName, this.infoMex}): _files = files,_breadcrumb = breadcrumb;
   
 
 @override@JsonKey() final  CloudStatus status;
- final  List<FileObject> _files;
-@override@JsonKey() List<FileObject> get files {
+ final  List<CloudItem> _files;
+@override@JsonKey() List<CloudItem> get files {
   if (_files is EqualUnmodifiableListView) return _files;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_files);
+}
+
+ final  List<String> _breadcrumb;
+@override@JsonKey() List<String> get breadcrumb {
+  if (_breadcrumb is EqualUnmodifiableListView) return _breadcrumb;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_breadcrumb);
 }
 
 @override@JsonKey() final  bool isNetworking;
@@ -247,16 +255,16 @@ _$CloudStateCopyWith<_CloudState> get copyWith => __$CloudStateCopyWithImpl<_Clo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CloudState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._files, _files)&&(identical(other.isNetworking, isNetworking) || other.isNetworking == isNetworking)&&(identical(other.networkinProgress, networkinProgress) || other.networkinProgress == networkinProgress)&&(identical(other.networkingFileId, networkingFileId) || other.networkingFileId == networkingFileId)&&(identical(other.selectedFileUpload, selectedFileUpload) || other.selectedFileUpload == selectedFileUpload)&&(identical(other.selectedFileUploadName, selectedFileUploadName) || other.selectedFileUploadName == selectedFileUploadName)&&(identical(other.infoMex, infoMex) || other.infoMex == infoMex));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CloudState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._files, _files)&&const DeepCollectionEquality().equals(other._breadcrumb, _breadcrumb)&&(identical(other.isNetworking, isNetworking) || other.isNetworking == isNetworking)&&(identical(other.networkinProgress, networkinProgress) || other.networkinProgress == networkinProgress)&&(identical(other.networkingFileId, networkingFileId) || other.networkingFileId == networkingFileId)&&(identical(other.selectedFileUpload, selectedFileUpload) || other.selectedFileUpload == selectedFileUpload)&&(identical(other.selectedFileUploadName, selectedFileUploadName) || other.selectedFileUploadName == selectedFileUploadName)&&(identical(other.infoMex, infoMex) || other.infoMex == infoMex));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_files),isNetworking,networkinProgress,networkingFileId,selectedFileUpload,selectedFileUploadName,infoMex);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_files),const DeepCollectionEquality().hash(_breadcrumb),isNetworking,networkinProgress,networkingFileId,selectedFileUpload,selectedFileUploadName,infoMex);
 
 @override
 String toString() {
-  return 'CloudState(status: $status, files: $files, isNetworking: $isNetworking, networkinProgress: $networkinProgress, networkingFileId: $networkingFileId, selectedFileUpload: $selectedFileUpload, selectedFileUploadName: $selectedFileUploadName, infoMex: $infoMex)';
+  return 'CloudState(status: $status, files: $files, breadcrumb: $breadcrumb, isNetworking: $isNetworking, networkinProgress: $networkinProgress, networkingFileId: $networkingFileId, selectedFileUpload: $selectedFileUpload, selectedFileUploadName: $selectedFileUploadName, infoMex: $infoMex)';
 }
 
 
@@ -267,7 +275,7 @@ abstract mixin class _$CloudStateCopyWith<$Res> implements $CloudStateCopyWith<$
   factory _$CloudStateCopyWith(_CloudState value, $Res Function(_CloudState) _then) = __$CloudStateCopyWithImpl;
 @override @useResult
 $Res call({
- CloudStatus status, List<FileObject> files, bool isNetworking, double networkinProgress, String? networkingFileId, File? selectedFileUpload, String? selectedFileUploadName, InfoMex? infoMex
+ CloudStatus status, List<CloudItem> files, List<String> breadcrumb, bool isNetworking, double networkinProgress, String? networkingFileId, File? selectedFileUpload, String? selectedFileUploadName, InfoMex? infoMex
 });
 
 
@@ -284,11 +292,12 @@ class __$CloudStateCopyWithImpl<$Res>
 
 /// Create a copy of CloudState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? files = null,Object? isNetworking = null,Object? networkinProgress = null,Object? networkingFileId = freezed,Object? selectedFileUpload = freezed,Object? selectedFileUploadName = freezed,Object? infoMex = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? files = null,Object? breadcrumb = null,Object? isNetworking = null,Object? networkinProgress = null,Object? networkingFileId = freezed,Object? selectedFileUpload = freezed,Object? selectedFileUploadName = freezed,Object? infoMex = freezed,}) {
   return _then(_CloudState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as CloudStatus,files: null == files ? _self._files : files // ignore: cast_nullable_to_non_nullable
-as List<FileObject>,isNetworking: null == isNetworking ? _self.isNetworking : isNetworking // ignore: cast_nullable_to_non_nullable
+as List<CloudItem>,breadcrumb: null == breadcrumb ? _self._breadcrumb : breadcrumb // ignore: cast_nullable_to_non_nullable
+as List<String>,isNetworking: null == isNetworking ? _self.isNetworking : isNetworking // ignore: cast_nullable_to_non_nullable
 as bool,networkinProgress: null == networkinProgress ? _self.networkinProgress : networkinProgress // ignore: cast_nullable_to_non_nullable
 as double,networkingFileId: freezed == networkingFileId ? _self.networkingFileId : networkingFileId // ignore: cast_nullable_to_non_nullable
 as String?,selectedFileUpload: freezed == selectedFileUpload ? _self.selectedFileUpload : selectedFileUpload // ignore: cast_nullable_to_non_nullable

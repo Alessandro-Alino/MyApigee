@@ -1,0 +1,16 @@
+deployList:
+  repeatableSets:
+    - deploySet:
+        label: sit
+        conciergeCheck:
+          environment: sit
+          artifact:
+            repositoryPath: oam-generic-group/apigee/OAM/${repo}/${version}/${proxyArchive}
+            name: ${proxyArchive}
+            version: ${version}
+        install:
+          tool:
+            apiProxy:
+              organizations:
+                - {gcpSIT}
+              name: ${proxyName}

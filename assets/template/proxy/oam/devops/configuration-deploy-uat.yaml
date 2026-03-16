@@ -1,0 +1,17 @@
+deployList:
+  repeatableSets:
+    - deploySet:
+        label: uat
+        conciergeCheck:
+          environment: qa
+          tenant: C0
+          artifact:
+            repositoryPath: oam-generic-group/apigee/OAM/${repo}/${version}/${proxyArchive}
+            name: ${proxyArchive}
+            version: ${version}
+        install:
+          tool:
+            apiProxy:
+              organizations:
+                - {gcpUAT}
+              name: ${proxyName}

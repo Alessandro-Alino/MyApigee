@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myapigee/config/extension/extensions.dart';
 import 'package:myapigee/feature/cloud/bloc/cloud_cubit.dart';
 import 'package:myapigee/widget/app_loading.dart';
 
@@ -11,36 +12,81 @@ class CloudTopBar extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(4.0),
       padding: const EdgeInsets.all(8.0),
+      height: 60.0,
       decoration: BoxDecoration(
         color: Colors.blueGrey.shade700,
         borderRadius: BorderRadius.circular(16.0),
       ),
       child: Row(
+        spacing: 16.0,
         children: [
-          // Reload File
-          TextButton(
-            onPressed: () {
-              context.read<CloudCubit>().loadFiles();
-            },
-            child: const Text('Refresh'),
+          // Action Button
+          Expanded(
+            child: Row(
+              spacing: 8.0,
+              children: [
+                Flexible(
+                  child: ActionChip(
+                    avatar: const Icon(Icons.create_new_folder),
+                    label: Text(context.ltr.create_folder),
+                    onPressed: () {},
+                  ),
+                ),
+                // Create Folder
+                Flexible(
+                  child: ActionChip(
+                    avatar: const Icon(Icons.upload),
+                    label: Text(context.ltr.upload),
+                    onPressed: () {
+                      // Upload File
+                      context.read<CloudCubit>().selectFileUpload();
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-          const Spacer(),
+          const VerticalDivider(width: 8.0),
           // Loading
           BlocBuilder<CloudCubit, CloudState>(
             builder: (context, state) {
-              return SizedBox(
-                child: state.status == CloudStatus.loading
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: SizedBox.square(
-                          dimension: 32.0,
-                          child: CircleAvatar(child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: const AppLoading(),
-                          )),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
+              return Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: SizedBox.square(
+                  dimension: 32.0,
+                  child: switch (state.status) {
+                    CloudStatus.loading => const AppLoading(),
+                    CloudStatus.success => Tooltip(
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade700,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      message: 'All good 👍',
+                      textStyle: Theme.of(context).textTheme.bodyMedium
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                      child: Icon(
+                        Icons.check_circle,
+                        color: Colors.green.shade700,
+                      ),
+                    ),
+                    _ => Tooltip(
+                      decoration: BoxDecoration(
+                        color: Colors.amber.shade600,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      textStyle: Theme.of(context).textTheme.bodyMedium
+                          ?.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          ),
+                      message: 'Server error.',
+                      child: Icon(Icons.error, color: Colors.amber.shade700),
+                    ),
+                  },
+                ),
               );
             },
           ),

@@ -1,0 +1,17 @@
+deployList:
+  repeatableSets:
+    - deploySet:
+        label: prod
+        conciergeCheck:
+          environment: prod
+          tenant: C0
+          artifact:
+            repositoryPath: oam-generic-group/apigee/OAM/${repo}/${version}/${proxyArchive}
+            name: ${proxyArchive}
+            version: ${version}
+        install:
+          tool:
+            apiProxy:
+              organizations:
+                - {gcpPRD}
+              name: ${proxyName}

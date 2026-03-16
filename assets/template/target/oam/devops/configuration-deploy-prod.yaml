@@ -1,0 +1,34 @@
+deployList:
+  repeatableSets:
+    - deploySet:
+        label: prod
+        conciergeCheck:
+          artifact:
+            repositoryPath: oam-generic-group/apigee/OAM/${repo}/${version}/${targetArchive}
+            name: ${targetArchive}
+            version: ${version}
+          environment: prod
+          tenant: C0
+        deploy:
+          artifact: targetservers/${jsonFilePRD}
+          tool:
+            targetServer:
+              organizations:
+                - {gcpPRD}
+              name: ${targetName}
+#    - deploySet:
+#        label: prod_ext
+#        conciergeCheck:
+#          artifact:
+#            repositoryPath: oam-generic-group/apigee/OAM/${repo}/${version}/${targetArchive}
+#            name: ${targetArchive}
+#            version: ${version}
+#          environment: prod
+#          tenant: C0
+#        deploy:
+#          artifact: targetservers/${jsonFile}
+#          tool:
+#            targetServer:
+#              organizations:
+#                - {gcpPRDEXT}
+#              name: ${targetName}

@@ -1,0 +1,28 @@
+env:
+  targetArchive: {envUpperCase}-{repoTargetName}_targetserverbundle.zip
+  version: 1.0.1
+  repo: {repoTargetName}
+  targetName: {targetName}
+  jsonFileSIT: {rawText}-sit.json
+  jsonFileUAT: {rawText}-uat.json
+  jsonFilePRD: {rawText}-prd.json
+
+log:
+  level: TRACE
+sonar:
+  tool:
+    npm:
+      args: -Dsonar.exclusions=**/**/*
+      command: run sonar-scanner
+publishArtifactList:
+  release: true
+  filter: BRANCH is 'develop'
+  before:
+    - compress:
+        archive: ${targetArchive}
+        sources:
+          - targetservers/${jsonFileSIT}
+  extractTool:
+    npm: { }
+  artifacts:
+    - artifact: ${targetArchive}

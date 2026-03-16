@@ -81,6 +81,14 @@ class _SideBarState extends State<SideBar> {
                 onTap: () =>
                     context.router.pushPath(AppRouteConst.createApiPage),
               ),
+              // Create Proxy
+              PageTile(
+                iconData: Icons.drive_file_move,
+                title: 'Create Proxy',
+                isExpanded: state,
+                onTap: () =>
+                    context.router.pushPath(AppRouteConst.createProxyPage),
+              ),
               // Cloud
               PageTile(
                 iconData: Icons.cloud_queue_rounded,

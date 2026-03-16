@@ -176,6 +176,66 @@ abstract class AppLocalizations {
   /// **'Fine.'**
   String get no_more;
 
+  /// No description provided for @proxy.
+  ///
+  /// In it, this message translates to:
+  /// **'Proxy'**
+  String get proxy;
+
+  /// No description provided for @target.
+  ///
+  /// In it, this message translates to:
+  /// **'Target'**
+  String get target;
+
+  /// No description provided for @name_proxy.
+  ///
+  /// In it, this message translates to:
+  /// **'Nome Proxy'**
+  String get name_proxy;
+
+  /// No description provided for @basepath.
+  ///
+  /// In it, this message translates to:
+  /// **'Basepath'**
+  String get basepath;
+
+  /// No description provided for @basepath_proxy.
+  ///
+  /// In it, this message translates to:
+  /// **'Basepath proxy'**
+  String get basepath_proxy;
+
+  /// No description provided for @basepath_target.
+  ///
+  /// In it, this message translates to:
+  /// **'Basepath target'**
+  String get basepath_target;
+
+  /// No description provided for @directory.
+  ///
+  /// In it, this message translates to:
+  /// **'Percorso'**
+  String get directory;
+
+  /// No description provided for @preview.
+  ///
+  /// In it, this message translates to:
+  /// **'Anteprima'**
+  String get preview;
+
+  /// No description provided for @upload.
+  ///
+  /// In it, this message translates to:
+  /// **'Upload'**
+  String get upload;
+
+  /// No description provided for @create_folder.
+  ///
+  /// In it, this message translates to:
+  /// **'Crea cartella'**
+  String get create_folder;
+
   /// No description provided for @categ.
   ///
   /// In it, this message translates to:

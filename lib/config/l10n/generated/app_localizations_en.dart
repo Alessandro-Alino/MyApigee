@@ -48,6 +48,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_more => 'The end.';
 
   @override
+  String get proxy => 'Proxy';
+
+  @override
+  String get target => 'Target';
+
+  @override
+  String get name_proxy => 'Name Proxy';
+
+  @override
+  String get basepath => 'Basepath';
+
+  @override
+  String get basepath_proxy => 'Basepath proxy';
+
+  @override
+  String get basepath_target => 'Basepath target';
+
+  @override
+  String get directory => 'Directory';
+
+  @override
+  String get preview => 'Preview';
+
+  @override
+  String get upload => 'Upload';
+
+  @override
+  String get create_folder => 'Create folder';
+
+  @override
   String get categ => 'Category';
 
   @override

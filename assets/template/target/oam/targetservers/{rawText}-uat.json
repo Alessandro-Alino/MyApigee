@@ -1,0 +1,9 @@
+{
+  "host": "",
+  "isEnabled": true,
+  "name": "{targetName}",
+  "port": 443,
+  "sSLInfo": {
+    "enabled": true
+  }
+}

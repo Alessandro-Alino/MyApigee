@@ -1,5 +1,6 @@
 import 'package:file_saver/file_saver.dart';
 import 'package:myapigee/feature/cloud/repo/error_interceptor.dart';
+import 'package:myapigee/feature/cloud/utils/cloud_item.dart';
 import 'package:universal_io/io.dart';
 import 'dart:developer';
 import 'package:dio/dio.dart';
@@ -25,16 +26,66 @@ class CloudCubit extends Cubit<CloudState> {
   CloudStatus _preStatus = CloudStatus.initial;
   Dio appDio = AppDio().dio;
 
+  // Set Breadcrumb
+  String _setBreadcrumb(String? path, int? index) {
+    // Get Breadcrumb from state
+    List<String> breadcrumb = List.from(state.breadcrumb);
+    // If path is null, return empty path
+    if (path == null) {
+      emit(state.copyWith(breadcrumb: const []));
+      return '';
+    }
+    // Set Breadcrumb by index
+    if (index != null) {
+      breadcrumb = breadcrumb.sublist(0, index + 1);
+      emit(state.copyWith(breadcrumb: breadcrumb));
+      // Normalized Path
+      final normPath = breadcrumb.join('/');
+      return normPath;
+    }
+    // Set Breadcrumb
+    else {
+      // Add path to breadcrumb
+      breadcrumb = breadcrumb..add(path);
+      emit(state.copyWith(breadcrumb: breadcrumb));
+      // Normalized Path
+      final normPath = breadcrumb.join('/');
+      return normPath;
+    }
+  }
+
+  // refresh BreadCrumb
+  void refreshBreadcrumb({int? index}) {
+    if (index == null) {
+      loadFiles();
+    } else {
+      loadFiles(path: state.breadcrumb[index], index: index);
+    }
+  }
+
   // Read the file from the bucket
-  Future<void> loadFiles() async {
-    List<FileObject> files = [];
+  Future<void> loadFiles({String? path, int? index}) async {
+    List<CloudItem> cloudItems = [];
     _loading();
+
     try {
-      final result = await cloudRepo.listFiles();
-      final cleanResult = result.where((e) => !e.name.startsWith('.')).toList();
-      files.addAll(cleanResult);
-      emit(state.copyWith(status: CloudStatus.success, files: files));
+      final String normPath = _setBreadcrumb(path, index);
+      // Get files from bucket
+      final result = await cloudRepo.listFiles(path: normPath);
+      // Clean result and convert into CloudItem
+      final cleanResult = result
+          .where((e) => !e.name.startsWith('.'))
+          .map((e) => CloudItem(file: e))
+          .toList();
+      cloudItems.addAll(cleanResult);
+      // Order by folder
+      cloudItems.sort(
+        (a, b) => b.isFolder.toString().compareTo(a.isFolder.toString()),
+      );
+      // Emit State
+      emit(state.copyWith(status: CloudStatus.success, files: cloudItems));
     } catch (e) {
+      // Show Error
       _showMex(
         mex: '[CLOUD_BLOC] Errore nel recupero dei file: $e',
         type: MexType.error,

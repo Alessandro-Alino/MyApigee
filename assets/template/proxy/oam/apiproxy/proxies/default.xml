@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+  <DefaultFaultRule name="all">
+    <Step>
+      <Name>FC-setCors</Name>
+    </Step>
+    <Step>
+      <Name>JS-setLoggingVariables</Name>
+    </Step>
+    <Condition>(error.status.code!=200) or (error.status.code!=201) or (error.status.code!=202) or (error.status.code!=203) or (error.status.code!=204)</Condition>
+  </DefaultFaultRule>
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step>
+        <Name>FC-securityChecks</Name>
+      </Step>
+      <Step>
+        <Name>AM-setSIEMIndex</Name>
+      </Step>
+    </Request>
+    <Response />
+  </PreFlow>
+  <Flows>
+
+    <Flow name="notFound">
+      <Description />
+      <Request>
+        <Step>
+          <Name>RF-flowNotFound</Name>
+        </Step>
+      </Request>
+      <Response />
+    </Flow>
+  </Flows>
+  <PostFlow name="PostFlow">
+    <Request>
+      <Step>
+        <Name>JS-setLoggingVariables</Name>
+      </Step>
+      <Step>
+        <Condition>organization.name != "{gcpSIT}"</Condition>
+        <Name>FC-setCors</Name>
+      </Step>
+    </Request>
+    <Response />
+  </PostFlow>
+  <PostClientFlow>
+    <Request />
+    <Response>
+      <Step>
+        <Name>FC-logICT</Name>
+      </Step>
+      <Step>
+        <Name>FC-logSIEM</Name>
+      </Step>
+    </Response>
+  </PostClientFlow>
+  <HTTPProxyConnection>
+    <BasePath>{basepathProxy}</BasePath>
+    <Properties>
+      <Property name="api.timeout">90000</Property>
+    </Properties>
+  </HTTPProxyConnection>
+  <RouteRule name="te-{countryCodeUpperCase}">
+    <TargetEndpoint>te-{countryCodeUpperCase}</TargetEndpoint>
+  </RouteRule>
+</ProxyEndpoint>

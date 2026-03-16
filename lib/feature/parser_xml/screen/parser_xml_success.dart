@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myapigee/config/l10n/local.dart';
+import 'package:myapigee/config/extension/extensions.dart';
 import 'package:myapigee/feature/parser_xml/bloc/parser_xml_cubit.dart';
 import 'package:myapigee/feature/parser_xml/widget/api_list.dart';
 import 'package:myapigee/feature/parser_xml/widget/filter_method.dart';

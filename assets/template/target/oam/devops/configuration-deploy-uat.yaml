@@ -1,0 +1,18 @@
+deployList:
+  repeatableSets:
+    - deploySet:
+        label: uat
+        conciergeCheck:
+          artifact:
+            repositoryPath: oam-generic-group/apigee/OAM/${repo}/${version}/${targetArchive}
+            name: ${targetArchive}
+            version: ${version}
+          environment: qa
+          tenant: C0
+        deploy:
+          artifact: targetservers/${jsonFileUAT}
+          tool:
+            targetServer:
+              organizations:
+                - {gcpUAT}
+              name: ${targetName}

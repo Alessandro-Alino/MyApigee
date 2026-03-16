@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="1" name="{proxyName}">
+  <DisplayName/>
+  <Description/>
+  <CreatedAt>1679562806476</CreatedAt>
+  <LastModifiedAt>1679563544037</LastModifiedAt>
+  <BasePaths>{basepathProxy}</BasePaths>
+  <Policies>
+    <Policy>FC-setCors</Policy>
+    <Policy>RF-flowNotFound</Policy>
+    <Policy>FC-securityChecks</Policy>
+    <Policy>AM-setSIEMIndex</Policy>
+    <Policy>JS-setLoggingVariables</Policy>
+    <Policy>FC-logICT</Policy>
+    <Policy>FC-logSIEM</Policy>
+  </Policies>
+  <ProxyEndpoints>
+    <ProxyEndpoint>default</ProxyEndpoint>
+  </ProxyEndpoints>
+  <Resources>
+    <Resource>jsc://Set-Siem-ICT-Variables.js</Resource>
+  </Resources>
+  <TargetEndpoints>
+    <TargetEndpoint>default</TargetEndpoint>
+  </TargetEndpoints>
+</APIProxy>

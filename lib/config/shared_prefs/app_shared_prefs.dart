@@ -6,9 +6,7 @@ class AppSharedPrefs {
 
   late SharedPreferences _prefs;
 
-  factory AppSharedPrefs() {
-    return _instance;
-  }
+  factory AppSharedPrefs() => _instance;
 
   AppSharedPrefs._internal();
 

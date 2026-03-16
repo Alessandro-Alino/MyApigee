@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="4" name="{proxyName}">
+  <DisplayName/>
+  <Description/>
+  <CreatedAt>1742573128533</CreatedAt>
+  <LastModifiedAt>1742573128533</LastModifiedAt>
+  <BasePaths>{basePath}</BasePaths>
+  <Policies>
+    <Policy>AM-inputError</Policy>
+    <Policy>AM-setSIEMIndex</Policy>
+    <Policy>FC-logICT</Policy>
+    <Policy>FC-logSIEM</Policy>
+    <Policy>FC-logTS</Policy>
+    <Policy>FC-securityChecks</Policy>
+    <Policy>FC-setCors</Policy>
+    <Policy>JS-setLoggingVariables</Policy>
+    <Policy>RF-flowNotFound</Policy>
+  </Policies>
+  <ProxyEndpoints>
+    <ProxyEndpoint>default</ProxyEndpoint>
+  </ProxyEndpoints>
+  <Resources>
+    <Resource>jsc://Set-Siem-ICT-Variables.js</Resource>
+  </Resources>
+  <TargetEndpoints>
+    <TargetEndpoint>default</TargetEndpoint>
+  </TargetEndpoints>
+</APIProxy>

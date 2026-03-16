@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:myapigee/config/l10n/local.dart';
+import 'package:myapigee/config/extension/extensions.dart';
 import 'package:myapigee/widget/sidebar/sidebar.dart';
 
 @RoutePage()

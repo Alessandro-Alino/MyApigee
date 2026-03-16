@@ -1,0 +1,10 @@
+{
+  "name": "@{env}-apigee/{proxyName}",
+  "version": "1.0.1",
+  "devDependencies": {
+    "sonarqube-scanner": "2.8.1"
+  },
+  "scripts": {
+    "sonar-scanner": "npm i && sonar-scanner"
+  }
+}

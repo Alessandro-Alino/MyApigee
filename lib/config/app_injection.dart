@@ -5,6 +5,8 @@ import 'package:myapigee/config/theme/repo/app_theme_service.dart';
 import 'package:myapigee/feature/cloud/bloc/cloud_cubit.dart';
 import 'package:myapigee/feature/cloud/repo/cloud_repo.dart';
 import 'package:myapigee/feature/create_api/bloc/create_api_cubit.dart';
+import 'package:myapigee/feature/create_proxy/bloc/create_proxy_cubit.dart';
+import 'package:myapigee/feature/create_proxy/repo/create_proxy_repo.dart';
 import 'package:myapigee/feature/parser_xml/bloc/parser_xml_cubit.dart';
 import 'package:myapigee/widget/sidebar/bloc/sidebar_cubit.dart';
 import 'package:myapigee/widget/sidebar/repo/app_sidebar_service.dart';
@@ -28,6 +30,10 @@ class AppInjection extends StatelessWidget {
         ),
         // Cloud Repo
         RepositoryProvider<CloudRepo>(create: (context) => CloudRepo()),
+        // Create Proxy Repo
+        RepositoryProvider<CreateProxyRepo>(
+          create: (context) => CreateProxyRepo(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -41,6 +47,12 @@ class AppInjection extends StatelessWidget {
           BlocProvider<SidebarCubit>(create: (context) => SidebarCubit()),
           // ParsedXml Cubit
           BlocProvider<ParserXmlCubit>(create: (context) => ParserXmlCubit()),
+          // CreateProxy Cubit
+          BlocProvider<CreateProxyCubit>(
+            create: (context) => CreateProxyCubit(
+              createProxyRepo: context.read<CreateProxyRepo>(),
+            ),
+          ),
           // CreateApi Cubit
           BlocProvider<CreateApiCubit>(create: (context) => CreateApiCubit()),
           // CloudApi Cubit

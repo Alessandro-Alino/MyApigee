@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapigee/feature/cloud/bloc/cloud_cubit.dart';
 import 'package:myapigee/feature/cloud/widget/cloud_file_list.dart';
 import 'package:myapigee/feature/cloud/widget/cloud_top_bar.dart';
-import 'package:myapigee/feature/cloud/widget/cloud_upload_bottom_bar.dart';
 import 'package:myapigee/widget/snackbar/app_snackbar.dart';
 
 @RoutePage()
@@ -34,8 +33,6 @@ class CloudPage extends StatelessWidget {
               ),
             ],
           ),
-
-          floatingActionButton: CloudUploadBottomBar(),
         ),
       ),
     );

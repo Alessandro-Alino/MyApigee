@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+  <DefaultFaultRule name="all">
+    <AlwaysEnforce>true</AlwaysEnforce>
+    <Step>
+      <Name>FC-setCors</Name>
+    </Step>
+    <Step>
+      <Name>JS-setLoggingVariables</Name>
+    </Step>
+    <Condition>(error.status.code!=200) or (error.status.code!=201) or (error.status.code!=202) or (error.status.code!=203) or (error.status.code!=204)</Condition>
+  </DefaultFaultRule>
+  <FaultRules>
+    <FaultRule name="JTP-error">
+      <Step>
+        <Name>AM-inputError</Name>
+      </Step>
+      <Condition>(jsonattack.JTP-message.failed = true)</Condition>
+    </FaultRule>
+    <FaultRule name="REP-error">
+      <Step>
+        <Name>AM-inputError</Name>
+      </Step>
+      <Condition>(regularexpressionprotection.REP-Generic-Threat-Protection.failed = true)</Condition>
+    </FaultRule>
+  </FaultRules>
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step>
+        <Name>FC-securityChecks</Name>
+      </Step>
+      <Step>
+        <Name>AM-setSIEMIndex</Name>
+      </Step>
+    </Request>
+    <Response/>
+  </PreFlow>
+  <Flows>
+
+    <Flow name="notFound">
+      <Description/>
+      <Request>
+        <Step>
+          <Name>RF-flowNotFound</Name>
+        </Step>
+      </Request>
+      <Response/>
+    </Flow>
+  </Flows>
+  <PostFlow name="PostFlow">
+    <Request>
+      <Step>
+        <Name>JS-setLoggingVariables</Name>
+      </Step>
+      <Step>
+        <Condition>organization.name != "{gcpSIT}"</Condition>
+        <Name>FC-setCors</Name>
+      </Step>
+    </Request>
+    <Response/>
+  </PostFlow>
+  <PostClientFlow>
+    <Request/>
+    <Response>
+      <Step>
+        <Name>FC-logICT</Name>
+      </Step>
+      <Step>
+        <Name>FC-logSIEM</Name>
+      </Step>
+      <Step>
+        <Name>FC-logTS</Name>
+      </Step>
+    </Response>
+  </PostClientFlow>
+  <HTTPProxyConnection>
+    <BasePath>{basePath}</BasePath>
+  </HTTPProxyConnection>
+  <RouteRule name="te-{countryCodeUpperCase}">
+    <TargetEndpoint>te-{countryCodeUpperCase}</TargetEndpoint>
+    <Condition>request.header.Host JavaRegex "(.*\.{countryCode}$|.*{countryCode}-.*)"</Condition>
+  </RouteRule>
+</ProxyEndpoint>

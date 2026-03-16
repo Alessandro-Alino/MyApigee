@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TargetEndpoint name="te-{countryCodeUpperCase}">
+  <DefaultFaultRule name="all">
+    <Step>
+      <Name>FC-setCors</Name>
+    </Step>
+    <Step>
+      <Name>JS-setLoggingVariables</Name>
+    </Step>
+    <Condition>(error.status.code!=200) or (error.status.code!=201) or (error.status.code!=202) or (error.status.code!=203) or (error.status.code!=204)</Condition>
+  </DefaultFaultRule>
+  <PreFlow name="PreFlow">
+    <Request/>
+    <Response/>
+  </PreFlow>
+  <Flows/>
+  <PostFlow name="PostFlow">
+    <Request/>
+    <Response/>
+  </PostFlow>
+  <HTTPTargetConnection>
+    <LoadBalancer>
+      <Server name="{targetName}"/>
+    </LoadBalancer>
+    <Path>{basePath}</Path>
+    <Properties/>
+  </HTTPTargetConnection>
+</TargetEndpoint>

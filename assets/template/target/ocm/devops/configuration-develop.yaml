@@ -1,0 +1,17 @@
+deployList:
+  repeatableSets:
+    - deploySet:
+        label: sit
+        conciergeCheck:
+          artifact:
+            repositoryPath: ocm-generic-group/apigee/OCM/${repo}/${version}/${targetArchive}
+            name: ${targetArchive}
+            version: ${version}
+          environment: sit
+        deploy:
+          artifact: targetservers/${jsonFileSIT}
+          tool:
+            targetServer:
+              organizations:
+                - {gcpSIT}
+              name: ${targetName}

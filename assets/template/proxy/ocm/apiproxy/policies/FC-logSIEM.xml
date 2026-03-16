@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FlowCallout continueOnError="false" enabled="true" name="FC-logSIEM">
+  <DisplayName>FC-logSIEM</DisplayName>
+  <Parameters/>
+  <SharedFlowBundle>sfw-ocm-001-ww-splunk-siem-log</SharedFlowBundle>
+</FlowCallout>

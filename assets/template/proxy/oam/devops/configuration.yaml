@@ -1,0 +1,25 @@
+env:
+  proxyArchive: {envUpperCase}-{repoName}_proxybundle.zip
+  version: 1.0.1
+  repo: {repoName}
+  proxyName: {proxyName}
+
+log:
+  level: TRACE
+sonar:
+  tool:
+    npm:
+      args: -Dsonar.exclusions=**/**/*
+      command: run sonar-scanner
+publishArtifactList:
+  release: true
+  filter: BRANCH is 'develop'
+  before:
+    - compress:
+        archive: ${proxyArchive}
+        sources:
+          - apiproxy
+  extractTool:
+    npm: { }
+  artifacts:
+    - artifact: ${proxyArchive}

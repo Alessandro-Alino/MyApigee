@@ -22,6 +22,12 @@ class AppRouter extends RootStackRouter {
           page: ParserXmlRoute.page,
           transitionsBuilder: TransitionsBuilders.fadeIn,
         ),
+        // Create Proxy Page
+        CustomRoute(
+          path: AppRouteConst.createProxyPage,
+          page: CreateProxyRoute.page,
+          transitionsBuilder: TransitionsBuilders.fadeIn,
+        ),
         // Create API Page
         CustomRoute(
           path: AppRouteConst.createApiPage,
@@ -33,6 +39,13 @@ class AppRouter extends RootStackRouter {
           path: AppRouteConst.cloudPage,
           page: CloudRoute.page,
           transitionsBuilder: TransitionsBuilders.fadeIn,
+          children: [
+            // Create Folder
+            AutoRoute(
+              path: AppRouteConst.cloudCreateFolderPage,
+              page: CreateFolderRoute.page,
+            ),
+          ]
         ),
       ],
     ),

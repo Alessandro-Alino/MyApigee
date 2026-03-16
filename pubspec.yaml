@@ -87,6 +87,30 @@ flutter:
   assets:
     - assets/svg/
     - assets/icon/
+    # Template Proxy OAM
+    - assets/template/proxy/oam/
+    - assets/template/proxy/oam/apiproxy/
+    - assets/template/proxy/oam/apiproxy/policies/
+    - assets/template/proxy/oam/apiproxy/proxies/
+    - assets/template/proxy/oam/apiproxy/resources/jsc/
+    - assets/template/proxy/oam/apiproxy/targets/
+    - assets/template/proxy/oam/devops/
+    # Template Target OAM
+    - assets/template/target/oam/
+    - assets/template/target/oam/targetservers/
+    - assets/template/target/oam/devops/
+    # Template Proxy OCM
+    - assets/template/proxy/ocm/
+    - assets/template/proxy/ocm/apiproxy/
+    - assets/template/proxy/ocm/apiproxy/policies/
+    - assets/template/proxy/ocm/apiproxy/proxies/
+    - assets/template/proxy/ocm/apiproxy/resources/jsc/
+    - assets/template/proxy/ocm/apiproxy/targets/
+    - assets/template/proxy/ocm/devops/
+    # Template Target OCM
+    - assets/template/target/ocm/
+    - assets/template/target/ocm/targetservers/
+    - assets/template/target/ocm/devops/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

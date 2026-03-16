@@ -5,6 +5,11 @@ class AppLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: CircularProgressIndicator.adaptive());
+    return CircleAvatar(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(child: CircularProgressIndicator.adaptive()),
+      ),
+    );
   }
 }

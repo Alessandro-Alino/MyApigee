@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FlowCallout continueOnError="false" enabled="true" name="FC-intranetAccess">
+  <DisplayName>FC-intranetAccess</DisplayName>
+  <FaultRules/>
+  <Properties/>
+  <SharedFlowBundle>sfw-oam-001-ww-intranet-access</SharedFlowBundle>
+</FlowCallout>

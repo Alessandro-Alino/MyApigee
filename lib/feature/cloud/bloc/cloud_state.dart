@@ -4,7 +4,8 @@ part of 'cloud_cubit.dart';
 sealed class CloudState with _$CloudState {
   const factory CloudState({
     @Default(CloudStatus.initial) CloudStatus status,
-    @Default([]) final List<FileObject> files,
+    @Default([]) final List<CloudItem> files,
+    @Default([]) final List<String> breadcrumb,
     @Default(false) final bool isNetworking,
     @Default(0.0) final double networkinProgress,
     final String? networkingFileId,
@@ -16,8 +17,10 @@ sealed class CloudState with _$CloudState {
   static CloudState initState() => const CloudState(
     status: CloudStatus.initial,
     files: [],
+    breadcrumb: [],
     isNetworking: false,
     networkinProgress: 0.0,
+    networkingFileId: null,
     selectedFileUpload: null,
     selectedFileUploadName: null,
     infoMex: null,
