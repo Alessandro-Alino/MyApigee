@@ -230,6 +230,12 @@ abstract class AppLocalizations {
   /// **'Upload'**
   String get upload;
 
+  /// No description provided for @select.
+  ///
+  /// In it, this message translates to:
+  /// **'Seleziona'**
+  String get select;
+
   /// No description provided for @create_folder.
   ///
   /// In it, this message translates to:

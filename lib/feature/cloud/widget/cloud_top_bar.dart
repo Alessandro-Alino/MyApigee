@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapigee/config/extension/extensions.dart';
 import 'package:myapigee/feature/cloud/bloc/cloud_cubit.dart';
+import 'package:myapigee/feature/cloud/widget/create_folder_dialog.dart';
 import 'package:myapigee/widget/app_loading.dart';
 
 class CloudTopBar extends StatelessWidget {
@@ -25,21 +26,19 @@ class CloudTopBar extends StatelessWidget {
             child: Row(
               spacing: 8.0,
               children: [
+                // Create Folder
                 Flexible(
                   child: ActionChip(
                     avatar: const Icon(Icons.create_new_folder),
                     label: Text(context.ltr.create_folder),
-                    onPressed: () {},
-                  ),
-                ),
-                // Create Folder
-                Flexible(
-                  child: ActionChip(
-                    avatar: const Icon(Icons.upload),
-                    label: Text(context.ltr.upload),
                     onPressed: () {
-                      // Upload File
-                      context.read<CloudCubit>().selectFileUpload();
+                      // Show Dialog for Create Folder
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CreateFolderDialog();
+                        },
+                      );
                     },
                   ),
                 ),
@@ -47,7 +46,7 @@ class CloudTopBar extends StatelessWidget {
             ),
           ),
           const VerticalDivider(width: 8.0),
-          // Loading
+          // Icon Check
           BlocBuilder<CloudCubit, CloudState>(
             builder: (context, state) {
               return Padding(
@@ -68,7 +67,7 @@ class CloudTopBar extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                       child: Icon(
-                        Icons.check_circle,
+                        Icons.check_circle_rounded,
                         color: Colors.green.shade700,
                       ),
                     ),

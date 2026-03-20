@@ -19,11 +19,11 @@ class PercentageLoading extends StatelessWidget {
                   children: [
                     // Percentage
                     Text(
-                      '${(state.networkinProgress * 100).toStringAsFixed(0)} %',
+                      '${(state.networkingProgress * 100).toStringAsFixed(0)} %',
                     ),
                     // Circular
                     CircularProgressIndicator.adaptive(
-                      value: state.networkinProgress,
+                      value: state.networkingProgress,
                       // color of value
                       valueColor: AlwaysStoppedAnimation<Color>(
                         Colors.deepPurple,

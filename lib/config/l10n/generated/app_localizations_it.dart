@@ -75,6 +75,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get upload => 'Upload';
 
   @override
+  String get select => 'Seleziona';
+
+  @override
   String get create_folder => 'Crea cartella';
 
   @override

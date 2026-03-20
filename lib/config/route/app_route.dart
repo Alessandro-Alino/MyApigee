@@ -39,13 +39,6 @@ class AppRouter extends RootStackRouter {
           path: AppRouteConst.cloudPage,
           page: CloudRoute.page,
           transitionsBuilder: TransitionsBuilders.fadeIn,
-          children: [
-            // Create Folder
-            AutoRoute(
-              path: AppRouteConst.cloudCreateFolderPage,
-              page: CreateFolderRoute.page,
-            ),
-          ]
         ),
       ],
     ),

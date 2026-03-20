@@ -7,10 +7,9 @@ sealed class CloudState with _$CloudState {
     @Default([]) final List<CloudItem> files,
     @Default([]) final List<String> breadcrumb,
     @Default(false) final bool isNetworking,
-    @Default(0.0) final double networkinProgress,
+    @Default(0.0) final double networkingProgress,
     final String? networkingFileId,
-    final File? selectedFileUpload,
-    final String? selectedFileUploadName,
+    @Default([]) final List<FileUploadModel> fileUploads,
     final InfoMex? infoMex,
   }) = _CloudState;
 
@@ -19,10 +18,9 @@ sealed class CloudState with _$CloudState {
     files: [],
     breadcrumb: [],
     isNetworking: false,
-    networkinProgress: 0.0,
+    networkingProgress: 0.0,
     networkingFileId: null,
-    selectedFileUpload: null,
-    selectedFileUploadName: null,
+    fileUploads: [],
     infoMex: null,
   );
 }

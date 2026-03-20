@@ -1,10 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myapigee/config/extension/extensions.dart';
 import 'package:myapigee/feature/cloud/bloc/cloud_cubit.dart';
-import 'package:myapigee/feature/cloud/widget/cloud_file_list.dart';
+import 'package:myapigee/feature/cloud/utils/cloud_item.dart';
+import 'package:myapigee/feature/cloud/widget/action_button.dart';
+import 'package:myapigee/feature/cloud/widget/breadcrumb.dart';
 import 'package:myapigee/feature/cloud/widget/cloud_top_bar.dart';
-import 'package:myapigee/widget/snackbar/app_snackbar.dart';
+import 'package:myapigee/feature/cloud/widget/percentage_loading.dart';
+import 'package:myapigee/feature/cloud/widget/upload_floating.dart';
+
+import '../../../widget/snackbar/app_snackbar.dart';
 
 @RoutePage()
 class CloudPage extends StatelessWidget {
@@ -22,17 +28,80 @@ class CloudPage extends StatelessWidget {
               // TopBar
               CloudTopBar(),
               // File List
-              BlocListener<CloudCubit, CloudState>(
-                listener: (context, state) {
-                  // InfoMex
-                  if (state.infoMex != null) {
-                    context.appSnackBar(infoMex: state.infoMex!);
-                  }
-                },
-                child: Expanded(child: CloudFileList()),
+              Expanded(
+                child: BlocConsumer<CloudCubit, CloudState>(
+                  listener: (context, state) {
+                    // InfoMex
+                    if (state.infoMex != null) {
+                      context.appSnackBar(infoMex: state.infoMex!);
+                    }
+                  },
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        // Breadcrumb
+                        Breadcrumb(),
+                        // List
+                        Expanded(
+                          child: state.files.isEmpty
+                              ? const Center(child: Text('Nessun file trovato'))
+                              : ListView.builder(
+                                  padding: const EdgeInsets.only(bottom: 80.0),
+                                  itemCount: state.files.length,
+                                  itemBuilder: (context, index) {
+                                    final CloudItem cloudItem =
+                                        state.files[index];
+                                    return Card(
+                                      clipBehavior: Clip.hardEdge,
+                                      child: ListTile(
+                                        onTap: () {
+                                          if (cloudItem.isFolder) {
+                                            // Navigate to folder
+                                            context
+                                                .read<CloudCubit>()
+                                                .loadFiles(
+                                                  path: cloudItem.file.name,
+                                                );
+                                          }
+                                        },
+                                        leading: Icon(
+                                          cloudItem.isFolder
+                                              ? Icons.folder
+                                              : Icons.file_copy,
+                                        ),
+                                        title: Text(
+                                          cloudItem.file.name,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        subtitle: cloudItem.isFolder
+                                            ? null
+                                            : Text(
+                                                cloudItem.size.formatFileSize(),
+                                              ),
+                                        trailing: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            // Loading Progress if download
+                                            PercentageLoading(
+                                              file: cloudItem.file,
+                                            ),
+                                            // Action Button
+                                            ActionButton(cloudItem: cloudItem),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ],
           ),
+          floatingActionButton: UploadFloating(),
         ),
       ),
     );

@@ -51,7 +51,7 @@ class _BreadcrumbState extends State<Breadcrumb> {
                     ),
                   ),
                 ),
-                // Bredcrumb list
+                // Breadcrumb list
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8.0),

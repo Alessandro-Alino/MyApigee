@@ -22,6 +22,7 @@
   "directory": "Percorso",
   "preview": "Anteprima",
   "upload": "Upload",
+  "select": "Seleziona",
   "create_folder": "Crea cartella",
   "@_CATEGORIES": {},
   "categ": "Categoria",

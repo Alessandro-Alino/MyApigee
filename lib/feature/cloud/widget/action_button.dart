@@ -1,15 +1,16 @@
+import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapigee/feature/cloud/bloc/cloud_cubit.dart';
+import 'package:myapigee/feature/cloud/utils/cloud_item.dart';
 import 'package:myapigee/widget/snackbar/app_snackbar.dart';
 import 'package:myapigee/widget/snackbar/model/info_mex_model.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ActionButton extends StatelessWidget {
-  const ActionButton({super.key, required this.file});
+  const ActionButton({super.key, required this.cloudItem});
 
-  final FileObject file;
+  final CloudItem cloudItem;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +25,12 @@ class ActionButton extends StatelessWidget {
       itemBuilder: (context) {
         return [
           // Download
-          !kIsWeb?
+          !kIsWeb ?
           PopupMenuItem(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             onTap: () {
               if (!kIsWeb) {
-                context.read<CloudCubit>().downloadFileWithProgress(file);
+                context.read<CloudCubit>().downloadFileWithProgress(cloudItem.file);
               } else {
                 context.appSnackBar(
                   infoMex: InfoMex(mex: 'Not from Web', type: MexType.warning),
@@ -40,13 +41,13 @@ class ActionButton extends StatelessWidget {
               leading: const Icon(Icons.download, color: Colors.white),
               title: const Text('Download'),
             ),
-          ):
+          ) :
           // Download File from Web
           PopupMenuItem(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             onTap: () {
               if (kIsWeb) {
-                context.read<CloudCubit>().downloadFileFromWeb(file);
+                context.read<CloudCubit>().downloadFileFromWeb(cloudItem.file);
               } else {
                 context.appSnackBar(
                   infoMex: InfoMex(mex: 'Only from Web', type: MexType.warning),
@@ -65,7 +66,13 @@ class ActionButton extends StatelessWidget {
           PopupMenuItem(
             padding: EdgeInsets.zero,
             onTap: () {
-              context.read<CloudCubit>().deleteFile(file);
+              if (cloudItem.isFolder) {
+                log('Delete folder');
+                context.read<CloudCubit>().deleteFolder(cloudItem.file.name);
+              } else {
+                log('Delete file');
+                context.read<CloudCubit>().deleteFile(cloudItem.file);
+              }
             },
             labelTextStyle: WidgetStateProperty.resolveWith((e) {
               return TextStyle(color: Colors.red, fontWeight: FontWeight.w600);

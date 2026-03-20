@@ -1,4 +1,7 @@
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter/services.dart';
+import 'package:myapigee/feature/cloud/model/file_upload_model.dart';
+import 'package:myapigee/feature/cloud/repo/cloud_error_handler.dart';
 import 'package:myapigee/feature/cloud/repo/error_interceptor.dart';
 import 'package:myapigee/feature/cloud/utils/cloud_item.dart';
 import 'package:universal_io/io.dart';
@@ -70,6 +73,7 @@ class CloudCubit extends Cubit<CloudState> {
 
     try {
       final String normPath = _setBreadcrumb(path, index);
+      log('[PATH] $normPath');
       // Get files from bucket
       final result = await cloudRepo.listFiles(path: normPath);
       // Clean result and convert into CloudItem
@@ -85,11 +89,10 @@ class CloudCubit extends Cubit<CloudState> {
       // Emit State
       emit(state.copyWith(status: CloudStatus.success, files: cloudItems));
     } catch (e) {
+      final error = CloudErrorHandler.handle(e);
       // Show Error
-      _showMex(
-        mex: '[CLOUD_BLOC] Errore nel recupero dei file: $e',
-        type: MexType.error,
-      );
+      _showMex(mex: error, type: MexType.error);
+      log('[CLOUD_BLOC] Errore nel recupero dei file: $error');
     }
   }
 
@@ -97,7 +100,9 @@ class CloudCubit extends Cubit<CloudState> {
   Future<void> downloadFileFromWeb(FileObject file) async {
     try {
       emit(state.copyWith(isNetworking: true, networkingFileId: file.id));
-      final fileBytes = await cloudRepo.downloadFile(file.name);
+      // Normalized Path
+      final normPath = state.breadcrumb.join('/');
+      final fileBytes = await cloudRepo.downloadFile(normPath, file.name);
       //download File on WEB
       final download = await FileSaver.instance.saveFile(
         name: file.name,
@@ -109,7 +114,7 @@ class CloudCubit extends Cubit<CloudState> {
         state.copyWith(
           isNetworking: false,
           networkingFileId: null,
-          networkinProgress: 0.0,
+          networkingProgress: 0.0,
         ),
       );
       _showMex(mex: 'Download Completato', type: MexType.success);
@@ -131,7 +136,9 @@ class CloudCubit extends Cubit<CloudState> {
     try {
       emit(state.copyWith(isNetworking: true, networkingFileId: file.id));
       final downloadDir = await getDownloadsDirectory();
-      final fileURL = await cloudRepo.getFileUrl(file.name);
+      // Normalized Path
+      final normPath = state.breadcrumb.join('/');
+      final fileURL = await cloudRepo.getFileUrl(normPath, file.name);
 
       if (downloadDir != null) {
         await appDio.download(
@@ -140,7 +147,7 @@ class CloudCubit extends Cubit<CloudState> {
           onReceiveProgress: (receivedBytes, totalBytes) {
             if (totalBytes != -1) {
               final progress = receivedBytes / totalBytes;
-              emit(state.copyWith(networkinProgress: progress));
+              emit(state.copyWith(networkingProgress: progress));
             }
           },
         );
@@ -149,7 +156,7 @@ class CloudCubit extends Cubit<CloudState> {
           state.copyWith(
             isNetworking: false,
             networkingFileId: null,
-            networkinProgress: 0.0,
+            networkingProgress: 0.0,
           ),
         );
         _showMex(mex: 'Download Completato', type: MexType.success);
@@ -174,82 +181,200 @@ class CloudCubit extends Cubit<CloudState> {
 
   // Select File to Upload
   Future<void> selectFileUpload() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      final File file = File(result.files.single.path!);
-      final String fileName = result.files.single.name;
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+    );
 
-      emit(
-        state.copyWith(
-          selectedFileUpload: file,
-          selectedFileUploadName: fileName,
-        ),
-      );
+    if (result != null && result.files.isNotEmpty) {
+      final List<FileUploadModel> fileUploads = [];
+      // Iterate over the selected files
+      for (var file in result.files) {
+        // Create a FileUploadModel with the selected file
+        final FileUploadModel fileUploadModel = FileUploadModel(
+          fileUpload: File(file.path!),
+          fileName: file.name,
+        );
+        // Add to fileUploads
+        fileUploads.add(fileUploadModel);
+      }
+
+      emit(state.copyWith(fileUploads: fileUploads));
     } else {
       log('Nessun file selezionato');
     }
   }
 
   // Deselect File
-  void deselectFileUpload() {
-    emit(
-      state.copyWith(selectedFileUpload: null, selectedFileUploadName: null),
-    );
+  void deselectFileUpload(FileUploadModel fileToRemove) {
+    final updatedFileUploads = List<FileUploadModel>.from(state.fileUploads);
+    updatedFileUploads.remove(fileToRemove);
+
+    emit(state.copyWith(fileUploads: updatedFileUploads));
   }
 
   // Upload
-  Future<void> uploadFile() async {
-    // If no file, return
-    if (state.selectedFileUpload == null) {
+  Future<void> uploadFiles() async {
+    // Se non ci sono file, mostra un messaggio e esci
+    if (state.fileUploads.isEmpty) {
       _showMex(mex: '[CLOUD_BLOC] Nessun file selezionato', type: MexType.info);
-    } else {
-      final fileName = state.selectedFileUploadName;
-      final bytes = await state.selectedFileUpload?.readAsBytes();
+      return;
+    }
 
-      if (fileName != null && bytes != null) {
-        try {
-          emit(state.copyWith(isNetworking: true));
-          final fileURL = await cloudRepo.uploadFile(fileName, bytes);
-          log('[CLOUD_BLOC] REPO_UPLOAD: $fileURL');
-          // Upload Complete
-          loadFiles();
-          deselectFileUpload();
-          _showMex(mex: 'Upload Completato', type: MexType.success);
-          emit(state.copyWith(isNetworking: false));
-        } on DioException catch (e) {
-          deselectFileUpload();
-          final String dioErr = dioErrMex(e);
-          log('[DIO_EXPT] Errore durante  l\'upload: $e');
-          _showMex(mex: dioErr, type: MexType.error);
-        } catch (e) {
-          log('[CLOUD_BLOC] Errore durante  l\'upload: $e');
-          deselectFileUpload();
-          _showMex(
-            mex: '[CLOUD_BLOC] Errore durante  l\'upload: $e',
-            type: MexType.error,
-          );
-        }
-      } else {
-        deselectFileUpload();
-        _showMex(
-          mex: '[CLOUD_BLOC] Errore generico durante l\'upload',
-          type: MexType.error,
+    final updatedFiles = List<FileUploadModel>.from(state.fileUploads);
+
+    // Iterate over the selected files
+    for (int i = 0; i < updatedFiles.length; i++) {
+      final fileUploadModel = updatedFiles[i];
+
+      // Start upload and set Loading
+      updatedFiles[i] = fileUploadModel.copyWith(
+        fileUploadStatus: FileUploadStatus.loading,
+      );
+      emit(state.copyWith(fileUploads: updatedFiles));
+
+      try {
+        // Read the file as bytes
+        final bytes = await fileUploadModel.fileUpload.readAsBytes();
+        // Normalized Path
+        final normPath = state.breadcrumb.join('/');
+        // Upload the file to Supabase with progress
+        await cloudRepo.uploadFile(normPath, fileUploadModel.fileName, bytes);
+
+        // Update Status
+        updatedFiles[i] = fileUploadModel.copyWith(
+          fileUploadStatus: FileUploadStatus.success,
         );
+
+        emit(state.copyWith(fileUploads: List.from(updatedFiles)));
+
+        // updatedFiles[i] = fileUploadModel.copyWith(uploadedUrl: fileUrl);
+      } on DioException catch (e) {
+        // Gestione dell'errore
+        dioErrMex(e);
+        log(
+          '[DIO_EXPT] Errore durante l\'upload di ${fileUploadModel.fileName}: $e',
+        );
+
+        // Aggiorna lo stato del file a "error"
+        updatedFiles[i] = fileUploadModel.copyWith(
+          fileUploadStatus: FileUploadStatus.error,
+        );
+
+        emit(state.copyWith(fileUploads: List.from(updatedFiles)));
+      } catch (e) {
+        // Gestione di altri errori
+        log(
+          '[CLOUD_BLOC] Errore durante l\'upload di ${fileUploadModel.fileName}: $e',
+        );
+
+        // Aggiorna lo stato del file a "error"
+        updatedFiles[i] = fileUploadModel.copyWith(
+          fileUploadStatus: FileUploadStatus.error,
+        );
+
+        emit(state.copyWith(fileUploads: List.from(updatedFiles)));
       }
+    }
+
+    // Reload List
+    if (state.breadcrumb.isEmpty) {
+      loadFiles();
+    } else {
+      loadFiles(
+        path: state.breadcrumb.last,
+        index: state.breadcrumb.length - 1,
+      );
+    }
+
+    // // Rimuovi i file caricati con successo dalla selezione
+    // for (final fileModel in updatedFiles.where(
+    //   (f) => f.fileUploadStatus == FileUploadStatus.success,
+    // )) {
+    //   deselectFileUpload(fileModel);
+    // }
+  }
+
+  // Create Folder with an empty file placeholder
+  Future<void> createFolder(String nameFolder) async {
+    // Normalized Path
+    final normPath = state.breadcrumb.join('/');
+    // Folder Name
+    final folderName = nameFolder.trim();
+    // Generate empty File
+    final bytes = Uint8List(0);
+
+    // Create Folder
+    try {
+      final result = await cloudRepo.createFolder(normPath, folderName, bytes);
+      log(result.toString());
+      if (state.breadcrumb.isEmpty) {
+        loadFiles().then((e) {
+          _showMex(mex: 'Cartella creata', type: MexType.success);
+        });
+      } else {
+        loadFiles(
+          path: state.breadcrumb.last,
+          index: state.breadcrumb.length - 1,
+        ).then((e) {
+          _showMex(mex: 'Cartella creata', type: MexType.success);
+        });
+      }
+    } catch (e) {
+      _showMex(
+        mex: '[CLOUD_BLOC] Errore durante la creazione della cartella: $e',
+        type: MexType.error,
+      );
     }
   }
 
   // Delete file from bucket
   Future<void> deleteFile(FileObject file) async {
     try {
-      final result = await cloudRepo.deleteFile(file.name);
-      log(result.toString());
-      loadFiles().then((e) {
-        _showMex(mex: 'Eliminato', type: MexType.success);
-      });
+      // Normalized Path
+      final normPath = state.breadcrumb.join('/');
+      await cloudRepo.deleteFile(normPath, file.name);
+
+      if (state.breadcrumb.isEmpty) {
+        loadFiles().then((e) {
+          _showMex(mex: 'Eliminato', type: MexType.success);
+        });
+      } else {
+        loadFiles(
+          path: state.breadcrumb.last,
+          index: state.breadcrumb.length - 1,
+        ).then((e) {
+          _showMex(mex: 'Eliminato', type: MexType.success);
+        });
+      }
     } catch (e) {
       _showMex(
         mex: '[CLOUD_BLOC] Errore durante la cancellazione del file: $e',
+        type: MexType.error,
+      );
+    }
+  }
+
+  // Delete file from bucket
+  Future<void> deleteFolder(String folderName) async {
+    // Normalized Path
+    final normPath = state.breadcrumb.join('/');
+    try {
+      await cloudRepo.deleteFolder(normPath, folderName);
+      if (state.breadcrumb.isEmpty) {
+        loadFiles().then((e) {
+          _showMex(mex: 'Eliminato', type: MexType.success);
+        });
+      } else {
+        loadFiles(
+          path: state.breadcrumb.last,
+          index: state.breadcrumb.length - 1,
+        ).then((e) {
+          _showMex(mex: 'Eliminato', type: MexType.success);
+        });
+      }
+    } catch (e) {
+      _showMex(
+        mex: '[CLOUD_BLOC] Errore durante la cancellazione della cartella: $e',
         type: MexType.error,
       );
     }
@@ -268,7 +393,7 @@ class CloudCubit extends Cubit<CloudState> {
         infoMex: InfoMex(mex: mex, type: type),
         isNetworking: false,
         networkingFileId: null,
-        networkinProgress: 0.0,
+        networkingProgress: 0.0,
       ),
     );
     Future.delayed(const Duration(seconds: 2), () {
