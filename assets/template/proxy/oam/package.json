@@ -1,5 +1,5 @@
 {
-  "name": "@{env}-apigee/{proxyName}",
+  "name": "@{env}-apigee/{proxyCustomName}",
   "version": "1.0.1",
   "devDependencies": {
     "sonarqube-scanner": "2.8.1"

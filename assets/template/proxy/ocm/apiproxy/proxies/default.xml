@@ -74,7 +74,7 @@
     </Response>
   </PostClientFlow>
   <HTTPProxyConnection>
-    <BasePath>{basePath}</BasePath>
+    <BasePath>{basepathProxy}</BasePath>
   </HTTPProxyConnection>
   <RouteRule name="te-{countryCodeUpperCase}">
     <TargetEndpoint>te-{countryCodeUpperCase}</TargetEndpoint>

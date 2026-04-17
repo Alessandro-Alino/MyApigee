@@ -20,9 +20,9 @@
   </PostFlow>
   <HTTPTargetConnection>
     <LoadBalancer>
-      <Server name="{targetName}"/>
+      <Server name="{targetCustomName}"/>
     </LoadBalancer>
-    <Path>{basePath}</Path>
+    <Path>{basepathTarget}</Path>
     <Properties/>
   </HTTPTargetConnection>
 </TargetEndpoint>

@@ -23,7 +23,7 @@
       <Property name="io.timeout.millis">90000</Property>
     </Properties>
     <LoadBalancer>
-      <Server name="{targetName}"/>
+      <Server name="{targetCustomName}"/>
     </LoadBalancer>
     <Path>{basepathTarget}</Path>
     <Properties/>

@@ -32,9 +32,10 @@ class CloudRepo {
   // Download file from get the URL of a file in the bucket
   Future<String> getFileUrl(String path, String fileName) async {
     try {
+      final pathCreateUrl = path.isEmpty ? fileName : '$path/$fileName';
       final url = await _supabase.storage
           .from(_bucketName)
-          .createSignedUrl('$path/$fileName', 60);
+          .createSignedUrl(pathCreateUrl, 60);
 
       return url;
     } catch (e) {
@@ -79,6 +80,7 @@ class CloudRepo {
   Future<List<FileObject>> deleteFile(String path, String fileName) async {
     try {
       final pathToRemove = path.isEmpty ? fileName : '$path/$fileName';
+      log('CLOUD_REPO: $pathToRemove');
       final result = await _supabase.storage.from(_bucketName).remove([
         pathToRemove,
       ]);
@@ -95,11 +97,14 @@ class CloudRepo {
     String folderName,
     Uint8List bytes,
   ) async {
+    final pathNewFolder = path.isEmpty
+        ? "$folderName/.emptyFolderPlaceholder"
+        : '$path/$folderName/.emptyFolderPlaceholder';
     try {
       await _supabase.storage
           .from(_bucketName)
           .uploadBinary(
-            '$path/$folderName/.emptyFolderPlaceholder',
+            pathNewFolder,
             bytes,
             fileOptions: const FileOptions(upsert: true),
           );

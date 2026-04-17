@@ -2,7 +2,7 @@ env:
   proxyArchive: {envUpperCase}-{repoName}_proxybundle.zip
   version: 1.0.1
   repo: {repoName}
-  proxyName: {proxyName}
+  proxyName: {proxyCustomName}
 
 log:
   level: TRACE

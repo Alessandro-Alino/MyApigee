@@ -180,10 +180,10 @@ class CreateProxyCubit extends Cubit<CreateProxyState> {
 
   String _replaceVariables(String content) {
     return content
-        .replaceAll('{proxyName}', state.proxyName)
+        .replaceAll('{proxyCustomName}', state.proxyName)
         .replaceAll('{basepathProxy}', state.basepathProxy)
         .replaceAll('{basepathTarget}', state.basepathTarget)
-        .replaceAll('{targetName}', state.targetName)
+        .replaceAll('{targetCustomName}', state.targetName)
         .replaceAll('{repoName}', state.repoName)
         .replaceAll('{repoTargetName}', state.repoTargetName)
         .replaceAll('{rawText}', state.rawText)
