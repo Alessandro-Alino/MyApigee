@@ -4,28 +4,35 @@ import 'package:dio/dio.dart';
 class ErrorInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    final String errMex = dioErrMex(err);
-    log('ERR_DIO_INTER.: $errMex');
-    return super.onError(err, handler);
+    final response = err.response;
+    log('[ERR_DIO]: ${err.response?.statusCode} - ${err.response?.data}');
+    if (response != null) {
+      // Get Error Message
+      final String errorMex = statusErrorResponse(response.statusCode);
+      // Create new DioExeption instance with custom message
+      final customError = err.copyWith(message: errorMex);
+      // Reject the request with the custom error
+      handler.next(customError);
+    } else {
+      // Create new DioExeption instance with custom message
+      final customError = err.copyWith(
+        message: 'Server Not Reachable. Prpbably the project is Paused.',
+      );
+      // Reject the request with the custom error
+      handler.next(customError);
+    }
   }
 }
 
-// Error Message from DioException
-String dioErrMex(DioException err) {
-  switch (err.type) {
-    case DioExceptionType.connectionTimeout:
-      return 'Timeout di connessione: ${err.message}';
-    case DioExceptionType.sendTimeout:
-      return 'Timeout di invio: ${err.message}';
-    case DioExceptionType.receiveTimeout:
-      return 'Timeout di ricezione: ${err.message}';
-    case DioExceptionType.badResponse:
-      return 'Risposta non valida: ${err.response?.statusCode} - ${err.response?.data}';
-    case DioExceptionType.cancel:
-      return 'Richiesta annullata: ${err.message}';
-    case DioExceptionType.unknown:
-      return 'Errore sconosciuto: ${err.message}';
+String statusErrorResponse(int? statusCode) {
+  switch (statusCode) {
+    case 401:
+      return 'Unauthorized.';
+    case 403:
+      return 'Forbidden.';
+    case 404:
+      return 'Not Found.';
     default:
-      return 'Errore generico: ${err.message}';
+      return 'Server Error.';
   }
 }
