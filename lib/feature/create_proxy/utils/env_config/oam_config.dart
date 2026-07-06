@@ -5,7 +5,7 @@ class OAM {
     proxyFiles: [
       'apiproxy/proxies/default.xml',
       'apiproxy/targets/te-{countryCodeUpperCase}.xml',
-      'apiproxy/{proxyName}.xml',
+      'apiproxy/{proxyCustomName}.xml',
       'devops/configuration.yaml',
       'devops/configuration-develop.yaml',
       'devops/configuration-deploy-uat.yaml',

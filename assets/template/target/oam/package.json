@@ -1,5 +1,5 @@
 {
-    "name": "@{env}-apigee/{targetName}",
+    "name": "@{env}-apigee/{targetCustomName}",
     "version": "1.0.1",
     "devDependencies": {
         "sonarqube-scanner": "2.8.1"

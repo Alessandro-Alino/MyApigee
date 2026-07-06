@@ -100,8 +100,8 @@ class CreateProxyCubit extends Cubit<CreateProxyState> {
         targetName: 'tgs-$env-${gcp.prefix}$countryCode-$rawText',
         repoName: 'apigee-api-$env-${gcp.prefix}$rawText-$countryCode',
         repoTargetName: 'apigee-tgs-$env-${gcp.prefix}$rawText-$countryCode',
-        basepathProxy: '/$basepathProxy',
-        basepathTarget: '/$basepathTarget',
+        basepathProxy: basepathProxy.startsWith('/') ? basepathProxy : '/$basepathProxy',
+        basepathTarget: basepathTarget.startsWith('/') ? basepathTarget : '/$basepathTarget',
       ),
     );
   }
