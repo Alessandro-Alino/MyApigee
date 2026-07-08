@@ -20,39 +20,25 @@ class CloudRepo {
   // Get the list of files in the bucket
   Future<List<FileObject>> listFiles({String? path}) async {
     List<FileObject> response = [];
-    try {
-      response = await _supabase.storage.from(_bucketName).list(path: path);
-    } catch (e) {
-      log('CLOUD_REPO_ERROR: Errore nel recupero dei file.\n$e');
-      throw Exception('Errore nel recupero dei file: $e');
-    }
+    response = await _supabase.storage.from(_bucketName).list(path: path);
     return response;
   }
 
   // Download file from get the URL of a file in the bucket
   Future<String> getFileUrl(String path, String fileName) async {
-    try {
-      final pathCreateUrl = path.isEmpty ? fileName : '$path/$fileName';
-      final url = await _supabase.storage
-          .from(_bucketName)
-          .createSignedUrl(pathCreateUrl, 60);
-
-      return url;
-    } catch (e) {
-      throw Exception('Errore nel recupero dell\'URL del file: $e');
-    }
+    final pathCreateUrl = path.isEmpty ? fileName : '$path/$fileName';
+    final url = await _supabase.storage
+        .from(_bucketName)
+        .createSignedUrl(pathCreateUrl, 60);
+    return url;
   }
 
   // Download a file from the bucket
   Future<Uint8List> downloadFile(String path, String fileName) async {
-    try {
-      final result = await _supabase.storage
-          .from(_bucketName)
-          .download('$path/$fileName');
-      return result;
-    } catch (e) {
-      throw Exception('Errore nel caricamento del file: $e');
-    }
+    final result = await _supabase.storage
+        .from(_bucketName)
+        .download('$path/$fileName');
+    return result;
   }
 
   // Upload a file to the bucket
@@ -61,34 +47,25 @@ class CloudRepo {
     String fileName,
     Uint8List bytes,
   ) async {
-    try {
-      final pathToUpload = path.isEmpty ? fileName : '$path/$fileName';
-      await _supabase.storage
-          .from(_bucketName)
-          .uploadBinary(
-            pathToUpload,
-            bytes,
-            fileOptions: const FileOptions(upsert: true),
-          );
-      return fileName;
-    } catch (e) {
-      throw Exception('Errore nel caricamento del file: $e');
-    }
+    final pathToUpload = path.isEmpty ? fileName : '$path/$fileName';
+    await _supabase.storage
+        .from(_bucketName)
+        .uploadBinary(
+          pathToUpload,
+          bytes,
+          fileOptions: const FileOptions(upsert: true),
+        );
+    return fileName;
   }
 
   // Delete a file from the bucket
   Future<List<FileObject>> deleteFile(String path, String fileName) async {
-    try {
-      final pathToRemove = path.isEmpty ? fileName : '$path/$fileName';
-      log('CLOUD_REPO: $pathToRemove');
-      final result = await _supabase.storage.from(_bucketName).remove([
-        pathToRemove,
-      ]);
-      return result;
-    } catch (e) {
-      log('CLOUD_REPO_ERROR: Errore nell\'eliminazione del file.\n$e');
-      throw Exception('Errore nell\'eliminazione del file: $e');
-    }
+    final pathToRemove = path.isEmpty ? fileName : '$path/$fileName';
+    log('CLOUD_REPO: $pathToRemove');
+    final result = await _supabase.storage.from(_bucketName).remove([
+      pathToRemove,
+    ]);
+    return result;
   }
 
   // Create Folder
@@ -100,35 +77,26 @@ class CloudRepo {
     final pathNewFolder = path.isEmpty
         ? "$folderName/.emptyFolderPlaceholder"
         : '$path/$folderName/.emptyFolderPlaceholder';
-    try {
-      await _supabase.storage
-          .from(_bucketName)
-          .uploadBinary(
-            pathNewFolder,
-            bytes,
-            fileOptions: const FileOptions(upsert: true),
-          );
-      return folderName;
-    } catch (e) {
-      throw Exception('Errore nel caricamento del file: $e');
-    }
+    await _supabase.storage
+        .from(_bucketName)
+        .uploadBinary(
+          pathNewFolder,
+          bytes,
+          fileOptions: const FileOptions(upsert: true),
+        );
+    return folderName;
   }
 
   // Delete a file from the bucket
   Future<List<FileObject>> deleteFolder(String path, String folderName) async {
-    try {
-      // Remove the "/" after "$path" if path is empty (root folder)
-      final pathToRemove = path.isEmpty
-          ? '$folderName/.emptyFolderPlaceholder'
-          : '$path/$folderName/.emptyFolderPlaceholder';
-      // Delete folder
-      final result = await _supabase.storage.from(_bucketName).remove([
-        pathToRemove,
-      ]);
-      return result;
-    } catch (e) {
-      log('CLOUD_REPO_ERROR: Errore nell\'eliminazione del file.\n$e');
-      throw Exception('Errore nell\'eliminazione del file: $e');
-    }
+    // Remove the "/" after "$path" if path is empty (root folder)
+    final pathToRemove = path.isEmpty
+        ? '$folderName/.emptyFolderPlaceholder'
+        : '$path/$folderName/.emptyFolderPlaceholder';
+    // Delete folder
+    final result = await _supabase.storage.from(_bucketName).remove([
+      pathToRemove,
+    ]);
+    return result;
   }
 }

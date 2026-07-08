@@ -2,7 +2,7 @@ env:
   targetArchive: {envUpperCase}-{repoTargetName}_targetserverbundle.zip
   version: 1.0.1
   repo: {repoTargetName}
-  targetName: {targetName}
+  targetName: {targetCustomName}
   jsonFileSIT: {rawText}-sit.json
   jsonFileUAT: {rawText}-uat.json
   jsonFilePRD: {rawText}-prd.json

@@ -1,8 +1,6 @@
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/services.dart';
 import 'package:myapigee/feature/cloud/model/file_upload_model.dart';
-import 'package:myapigee/feature/cloud/repo/cloud_error_handler.dart';
-import 'package:myapigee/feature/cloud/repo/error_interceptor.dart';
 import 'package:myapigee/feature/cloud/utils/cloud_item.dart';
 import 'package:universal_io/io.dart';
 import 'dart:developer';
@@ -88,11 +86,21 @@ class CloudCubit extends Cubit<CloudState> {
       );
       // Emit State
       emit(state.copyWith(status: CloudStatus.success, files: cloudItems));
-    } catch (e) {
-      final error = CloudErrorHandler.handle(e);
+    } on DioException catch (e) {
       // Show Error
-      _showMex(mex: error, type: MexType.error);
-      log('[CLOUD_BLOC] Errore nel recupero dei file: $error');
+      _showMex(mex: '${e.message}', type: MexType.error);
+    } catch (e) {
+      // Handling Error Mex
+      String err = switch (e) {
+        StorageException(statusCode: '404') => 'Nessun file trovato.',
+        StorageException(statusCode: '401') => 'Non autorizzato.',
+        _ when e.toString().contains('SocketException') ||
+            e.toString().contains('Host sconosciuto') =>
+        'Server non raggiungibile. Forse il progetto è in pausa?',
+        _ => 'Errore nel recupero dei file.',
+      };
+      // Show Error
+      _showMex(mex: err, type: MexType.error);
     }
   }
 
@@ -119,9 +127,8 @@ class CloudCubit extends Cubit<CloudState> {
       );
       _showMex(mex: 'Download Completato', type: MexType.success);
     } on DioException catch (e) {
-      final String dioErr = dioErrMex(e);
       log('[DIO_EXPT] Errore durante il download: $e');
-      _showMex(mex: dioErr, type: MexType.error);
+      _showMex(mex: '${e.message}', type: MexType.error);
     } catch (e) {
       log('[CLOUD_BLOC] Errore durante il download: $e');
       _showMex(
@@ -167,9 +174,8 @@ class CloudCubit extends Cubit<CloudState> {
         );
       }
     } on DioException catch (e) {
-      final String dioErr = dioErrMex(e);
       log('[DIO_EXPT] Errore durante il download: $e');
-      _showMex(mex: dioErr, type: MexType.error);
+      _showMex(mex: '${e.message}', type: MexType.error);
     } catch (e) {
       log('[CLOUD_BLOC] Errore durante il download: $e');
       _showMex(
@@ -250,9 +256,8 @@ class CloudCubit extends Cubit<CloudState> {
         // updatedFiles[i] = fileUploadModel.copyWith(uploadedUrl: fileUrl);
       } on DioException catch (e) {
         // Gestione dell'errore
-        dioErrMex(e);
         log(
-          '[DIO_EXPT] Errore durante l\'upload di ${fileUploadModel.fileName}: $e',
+          '[DIO_EXPT] Errore durante l\'upload di ${fileUploadModel.fileName}: ${e.message}',
         );
 
         // Aggiorna lo stato del file a "error"

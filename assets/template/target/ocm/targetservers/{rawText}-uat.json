@@ -1,7 +1,7 @@
 {
   "host": "",
   "isEnabled": true,
-  "name": "{targetName}",
+  "name": "{targetCustomName}",
   "port": 443,
   "sSLInfo": {
     "enabled": true
