@@ -11,6 +11,7 @@ sealed class ApiModel with _$ApiModel {
     required String api,
     required String apiName,
     required Method method,
+    @Default(false) bool prodCond,
   }) = _ApiModel;
 
   factory ApiModel.fromJson(Map<String, Object?> json) =>

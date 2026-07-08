@@ -14,6 +14,36 @@ class FilterMethod extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
+          // Chip Filter No Prod
+          ActionChip(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 2.0),
+            label: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.all(2.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // Title Method
+                  Text('Prod Cond'),
+                  // Icon Close if filter by method
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: CircleAvatar(
+                      radius: 12.0,
+                      backgroundColor: Colors.red.shade900.withAlpha(180),
+                      child: Icon(Icons.close, size: 12.0, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            onPressed: () {
+              // Filter API by Prod Cond
+              context.read<ParserXmlCubit>().filterByProdCond(true);
+            },
+            side: BorderSide(color: Colors.grey),
+            color: WidgetStatePropertyAll(Colors.grey.shade900.withAlpha(100))
+          ),
           // List Method
           Expanded(
             child: BlocBuilder<ParserXmlCubit, ParserXmlState>(
@@ -66,15 +96,17 @@ class FilterMethod extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: ActionChip(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 2.0),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 2.0,
+                        ),
                         label: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           padding: isFilteredMethod
                               ? const EdgeInsets.all(2.0)
                               : const EdgeInsets.all(0.0),
                           child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               // Title Method
                               Text(
@@ -83,10 +115,11 @@ class FilterMethod extends StatelessWidget {
                               // Icon Close if filter by method
                               if (isFilteredMethod)
                                 Padding(
-                                  padding: const EdgeInsets.only(left:8.0),
+                                  padding: const EdgeInsets.only(left: 8.0),
                                   child: CircleAvatar(
                                     radius: 12.0,
-                                    backgroundColor: Colors.red.shade900.withAlpha(180),
+                                    backgroundColor: Colors.red.shade900
+                                        .withAlpha(180),
                                     child: Icon(
                                       Icons.close,
                                       size: 12.0,
@@ -101,13 +134,11 @@ class FilterMethod extends StatelessWidget {
                             ? null
                             : () {
                                 // Filter API by Method
-                                context
-                                    .read<ParserXmlCubit>()
-                                    .filterByMethod(method);
+                                context.read<ParserXmlCubit>().filterByMethod(
+                                  method,
+                                );
                               },
-                        side: BorderSide(
-                          color: method.color.withAlpha(150),
-                        ),
+                        side: BorderSide(color: method.color.withAlpha(150)),
                         color: apiByMethod == 0
                             ? WidgetStatePropertyAll(
                                 Colors.grey.shade900.withAlpha(100),

@@ -32,8 +32,7 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
       final Uint8List? fileBytes = result.files.single.bytes;
 
       if (fileBytes == null) {
-        // log('No FileBytes');
-        // log('FILE: ${result.files.single}');
+        _showMex(mex: 'No FileBytes', type: MexType.error);
       }
       emit(
         state.copyWith(
@@ -100,17 +99,12 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
     // Find Basepath
     final basePathElement = xmlDocument.findAllElements('BasePath').firstOrNull;
     if (basePathElement != null) {
-      // 3. Estrai il testo
+      // Extract Basepath
       final basepath = basePathElement.innerText;
       emit(state.copyWith(basepath: basepath));
     } else {
       _showMex(mex: 'Nessun basepath trovato', type: MexType.error);
     }
-
-    // Find Basepath
-    xmlDocument.nodes.map((e) {
-      log(e.toString());
-    });
 
     // Find all <Flow> elements
     xmlDocument.findAllElements('Flow').forEach((flow) {
@@ -126,6 +120,10 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
       final methodReg = RegExp('request\\.verb\\s*=\\s*"([^"]+)"');
       final methodz = methodReg.firstMatch(flow.outerXml)?.group(1);
 
+      // Prod Condition
+      final prodCondReg = RegExp(r'and\s*\(organization\.name\s*==\s*"[^"]*"\s+or\s+organization\.name\s*==\s*"[^"]*"\)');
+      final prodCond = prodCondReg.hasMatch(flow.outerXml);
+
       if (nameApi == 'notFound') {
         // Found the "notFound API"
         return;
@@ -139,6 +137,7 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
             api: api!,
             apiName: nameApi!,
             method: method,
+            prodCond: prodCond,
           );
           apiModels.add(apiModel);
         } else {
@@ -165,7 +164,7 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
       List<ApiModel> apiModelsFiltered = state.apiModels
           .where((e) => e.method == method)
           .toList();
-      // If click on the method that is arleady selected, return all API
+      // If click on the method that is already selected, return all API
       if (state.apiModelsFiltered.length != state.apiModels.length &&
           method == state.apiModelsFiltered.first.method) {
         emit(state.copyWith(apiModelsFiltered: state.apiModels));
@@ -177,6 +176,28 @@ class ParserXmlCubit extends Cubit<ParserXmlState> {
     }
   }
 
+  // Filter API by ProdCond
+  void filterByProdCond(bool value) {
+    // If no API, return
+    if (state.apiModels.isEmpty) {
+      return;
+    }
+    // Else filter API by ProdCond
+    else {
+      // Filter API list by ProdCond
+      List<ApiModel> apiModelsFiltered = state.apiModels
+          .where((e) => e.prodCond == true)
+          .toList();
+
+      // Filtered API
+      if (value==false) {
+        emit(state.copyWith(apiModelsFiltered: state.apiModels));
+      }
+      else {
+        emit(state.copyWith(apiModelsFiltered: apiModelsFiltered));
+      }
+    }
+  }
   // Toggle Select Mode
   void toggleSelectMode(bool selectedMode) {
     emit(state.copyWith(isSelectMode: selectedMode, apiToExport: []));

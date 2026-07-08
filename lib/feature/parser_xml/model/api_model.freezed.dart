@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ApiModel {
 
- String get api; String get apiName; Method get method;
+ String get api; String get apiName; Method get method; bool get prodCond;
 /// Create a copy of ApiModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ApiModelCopyWith<ApiModel> get copyWith => _$ApiModelCopyWithImpl<ApiModel>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApiModel&&(identical(other.api, api) || other.api == api)&&(identical(other.apiName, apiName) || other.apiName == apiName)&&(identical(other.method, method) || other.method == method));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApiModel&&(identical(other.api, api) || other.api == api)&&(identical(other.apiName, apiName) || other.apiName == apiName)&&(identical(other.method, method) || other.method == method)&&(identical(other.prodCond, prodCond) || other.prodCond == prodCond));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,api,apiName,method);
+int get hashCode => Object.hash(runtimeType,api,apiName,method,prodCond);
 
 @override
 String toString() {
-  return 'ApiModel(api: $api, apiName: $apiName, method: $method)';
+  return 'ApiModel(api: $api, apiName: $apiName, method: $method, prodCond: $prodCond)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ApiModelCopyWith<$Res>  {
   factory $ApiModelCopyWith(ApiModel value, $Res Function(ApiModel) _then) = _$ApiModelCopyWithImpl;
 @useResult
 $Res call({
- String api, String apiName, Method method
+ String api, String apiName, Method method, bool prodCond
 });
 
 
@@ -65,12 +65,13 @@ class _$ApiModelCopyWithImpl<$Res>
 
 /// Create a copy of ApiModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? api = null,Object? apiName = null,Object? method = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? api = null,Object? apiName = null,Object? method = null,Object? prodCond = null,}) {
   return _then(_self.copyWith(
 api: null == api ? _self.api : api // ignore: cast_nullable_to_non_nullable
 as String,apiName: null == apiName ? _self.apiName : apiName // ignore: cast_nullable_to_non_nullable
 as String,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
-as Method,
+as Method,prodCond: null == prodCond ? _self.prodCond : prodCond // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -152,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String api,  String apiName,  Method method)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String api,  String apiName,  Method method,  bool prodCond)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ApiModel() when $default != null:
-return $default(_that.api,_that.apiName,_that.method);case _:
+return $default(_that.api,_that.apiName,_that.method,_that.prodCond);case _:
   return orElse();
 
 }
@@ -173,10 +174,10 @@ return $default(_that.api,_that.apiName,_that.method);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String api,  String apiName,  Method method)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String api,  String apiName,  Method method,  bool prodCond)  $default,) {final _that = this;
 switch (_that) {
 case _ApiModel():
-return $default(_that.api,_that.apiName,_that.method);}
+return $default(_that.api,_that.apiName,_that.method,_that.prodCond);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -190,10 +191,10 @@ return $default(_that.api,_that.apiName,_that.method);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String api,  String apiName,  Method method)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String api,  String apiName,  Method method,  bool prodCond)?  $default,) {final _that = this;
 switch (_that) {
 case _ApiModel() when $default != null:
-return $default(_that.api,_that.apiName,_that.method);case _:
+return $default(_that.api,_that.apiName,_that.method,_that.prodCond);case _:
   return null;
 
 }
@@ -205,12 +206,13 @@ return $default(_that.api,_that.apiName,_that.method);case _:
 @JsonSerializable()
 
 class _ApiModel implements ApiModel {
-  const _ApiModel({required this.api, required this.apiName, required this.method});
+  const _ApiModel({required this.api, required this.apiName, required this.method, this.prodCond = false});
   factory _ApiModel.fromJson(Map<String, dynamic> json) => _$ApiModelFromJson(json);
 
 @override final  String api;
 @override final  String apiName;
 @override final  Method method;
+@override@JsonKey() final  bool prodCond;
 
 /// Create a copy of ApiModel
 /// with the given fields replaced by the non-null parameter values.
@@ -225,16 +227,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApiModel&&(identical(other.api, api) || other.api == api)&&(identical(other.apiName, apiName) || other.apiName == apiName)&&(identical(other.method, method) || other.method == method));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApiModel&&(identical(other.api, api) || other.api == api)&&(identical(other.apiName, apiName) || other.apiName == apiName)&&(identical(other.method, method) || other.method == method)&&(identical(other.prodCond, prodCond) || other.prodCond == prodCond));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,api,apiName,method);
+int get hashCode => Object.hash(runtimeType,api,apiName,method,prodCond);
 
 @override
 String toString() {
-  return 'ApiModel(api: $api, apiName: $apiName, method: $method)';
+  return 'ApiModel(api: $api, apiName: $apiName, method: $method, prodCond: $prodCond)';
 }
 
 
@@ -245,7 +247,7 @@ abstract mixin class _$ApiModelCopyWith<$Res> implements $ApiModelCopyWith<$Res>
   factory _$ApiModelCopyWith(_ApiModel value, $Res Function(_ApiModel) _then) = __$ApiModelCopyWithImpl;
 @override @useResult
 $Res call({
- String api, String apiName, Method method
+ String api, String apiName, Method method, bool prodCond
 });
 
 
@@ -262,12 +264,13 @@ class __$ApiModelCopyWithImpl<$Res>
 
 /// Create a copy of ApiModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? api = null,Object? apiName = null,Object? method = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? api = null,Object? apiName = null,Object? method = null,Object? prodCond = null,}) {
   return _then(_ApiModel(
 api: null == api ? _self.api : api // ignore: cast_nullable_to_non_nullable
 as String,apiName: null == apiName ? _self.apiName : apiName // ignore: cast_nullable_to_non_nullable
 as String,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
-as Method,
+as Method,prodCond: null == prodCond ? _self.prodCond : prodCond // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

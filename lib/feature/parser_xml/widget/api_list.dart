@@ -14,69 +14,50 @@ class ApiList extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 80.0),
           itemCount: state.apiModelsFiltered.length,
           itemBuilder: (context, index) {
-            ApiModel apiModel =
-            state.apiModelsFiltered[index];
+            ApiModel apiModel = state.apiModelsFiltered[index];
             return InkWell(
               borderRadius: BorderRadius.circular(8.0),
               onLongPress: () {
                 if (state.isSelectMode) {
                   // Toggle Select Mode
-                  context
-                      .read<ParserXmlCubit>()
-                      .toggleSelectMode(false);
+                  context.read<ParserXmlCubit>().toggleSelectMode(false);
                 } else {
                   // Toggle Select Mode
-                  context
-                      .read<ParserXmlCubit>()
-                      .toggleSelectMode(true);
+                  context.read<ParserXmlCubit>().toggleSelectMode(true);
                   // Add First API to Export list
-                  context
-                      .read<ParserXmlCubit>()
-                      .selectAPItoExport(apiModel);
+                  context.read<ParserXmlCubit>().selectAPItoExport(apiModel);
                 }
               },
               onTap: () {
                 // Add API to Export list
-                context
-                    .read<ParserXmlCubit>()
-                    .selectAPItoExport(apiModel);
+                context.read<ParserXmlCubit>().selectAPItoExport(apiModel);
               },
               child: Container(
                 margin: const EdgeInsets.all(4.0),
                 padding: const EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
-                  color: apiModel.method.color.withAlpha(
-                    150,
-                  ),
+                  color: apiModel.method.color.withAlpha(150),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // API
                     Flexible(
                       child: Row(
-                        spacing: state.isSelectMode
-                            ? 12.0
-                            : 8.0,
+                        spacing: state.isSelectMode ? 12.0 : 8.0,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           // Only if selected mode
                           AnimatedContainer(
-                            width: state.isSelectMode
-                                ? 24.0
-                                : 0.0,
+                            width: state.isSelectMode ? 24.0 : 0.0,
                             height: 24.0,
                             duration: Durations.short2,
                             child: Visibility(
                               visible: state.isSelectMode,
                               child: Checkbox(
                                 value:
-                                state.apiToExport
-                                    ?.contains(
-                                  apiModel,
-                                ) ??
+                                    state.apiToExport?.contains(apiModel) ??
                                     false,
                                 onChanged: (e) {
                                   // Add API to Export list
@@ -92,16 +73,21 @@ class ApiList extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // Method
-                    Text(
-                      apiModel.method.name.toUpperCase(),
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      spacing: 8.0,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Prod Condition
+                        ?apiModel.prodCond
+                            ? Badge(label: Text('No Prod'))
+                            : null,
+                        // Method
+                        Text(
+                          apiModel.method.name.toUpperCase(),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ],
                 ),

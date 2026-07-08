@@ -67,16 +67,14 @@ class TopBarAction extends StatelessWidget {
                     // Export Postman Collection
                     PopupMenuItem(
                       child: Row(
+                        spacing: 8.0,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: SvgPicture.asset(
-                              'assets/svg/postman.svg',
-                              semanticsLabel: 'Postman Icon',
-                              height: 25,
-                              width: 225,
-                            ),
+                          SvgPicture.asset(
+                            'assets/svg/postman.svg',
+                            semanticsLabel: 'Postman Icon',
+                            height: 25,
+                            width: 225,
                           ),
                           const Text('Export Postman'),
                         ],
@@ -109,16 +107,14 @@ class TopBarAction extends StatelessWidget {
                     // Export Exel
                     PopupMenuItem(
                       child: Row(
+                        spacing: 8.0,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: SvgPicture.asset(
-                              'assets/svg/excel.svg',
-                              semanticsLabel: 'Excel Icon',
-                              height: 25,
-                              width: 25,
-                            ),
+                          SvgPicture.asset(
+                            'assets/svg/excel.svg',
+                            semanticsLabel: 'Excel Icon',
+                            height: 25,
+                            width: 25,
                           ),
                           const Text('Export Excel'),
                         ],

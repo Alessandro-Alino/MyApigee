@@ -44,7 +44,17 @@ class ParserXmlSuccess extends StatelessWidget {
               // Toggle Select Mode
               context.read<ParserXmlCubit>().toggleSelectMode(false);
             },
-            label: Text('Close selection'),
+            label: Row(
+              children: [
+                BlocBuilder<ParserXmlCubit, ParserXmlState>(
+                  builder: (context, state) {
+                    return Text(
+                      'Selezionate: ${state.apiToExport?.length ?? 0}',
+                    );
+                  },
+                ),
+              ],
+            ),
             icon: const Icon(Icons.close),
           ),
         ),
